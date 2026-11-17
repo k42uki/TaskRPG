@@ -601,7 +601,7 @@
     };
 
     // Firebase初期化
-    const appId = typeof __app_id ! 'undefined' ? __app_id : 'task-rpg-default';
+    const appId = typeof __app_id !== 'undefined' ? __app_id : 'task-rpg-default';
     let app = null;
     let auth = null;
     let db = null;
