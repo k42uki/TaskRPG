@@ -607,14 +607,15 @@
     let db = null;
 
     try {
-      const firebaseConfig = typeof __firebase_config ! 'undefined' ? JSON.parse(__firebase_config) : null;
-      if (firebaseConfig) {
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-      } else {
-        updateSyncUI('offline', 'ローカル動作モード');
-      }
+      const firebaseConfig = {
+        apiKey: "AIzaSyD0Jr6ubMI_l7FYCK4QoI5vyQC_gHUMz9w",
+        authDomain: "taskrpgapp.firebaseapp.com",
+        projectId: "taskrpgapp",
+        storageBucket: "taskrpgapp.firebasestorage.app",
+        messagingSenderId: "295517186056",
+        appId: "1:295517186056:web:61ec357e5f51ef40b189bd",
+        measurementId: "G-PNDVBGX67S"
+      };
     } catch (err) {
       console.error('Firebase init error:', err);
       updateSyncUI('error', '接続エラー');
