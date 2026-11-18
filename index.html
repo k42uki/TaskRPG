@@ -242,7 +242,7 @@
         </div>
         <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
           <button onclick="addPresetJobs()" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-serif font-bold text-sm shadow-lg shadow-emerald-900/40 transition active:scale-95">
-            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>サンプル職業3種を一括追加 look
+            <i class="fa-solid fa-wand-magic-sparkles mr-1.5"></i>サンプル職業3種を一括追加
           </button>
           <button onclick="openJobModal()" class="px-5 py-3 rounded-xl bg-[#1b241f] hover:bg-[#232f28] text-[#f3e5ab] border border-[#d4af37]/40 font-serif font-bold text-sm transition active:scale-95">
             <i class="fa-solid fa-pen mr-1.5"></i>自分で職業を作る
@@ -255,7 +255,7 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- タブ2: デイリークエスト（回数制限＆0時リセット対応） -->
+    <!-- タブ2: デイリークエスト -->
     <!-- ========================================== -->
     <section id="tab-dailies" class="hidden space-y-6 max-w-4xl mx-auto">
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-5">
@@ -265,9 +265,8 @@
               <i class="fa-solid fa-sun text-[#d4af37]"></i>
               <span>日々の修行場（デイリー試練）</span>
             </h2>
-            <p class="text-xs sm:text-sm text-[#a8a293] mt-0.5">毎日の日課を刻もう！累計3回達成するごとに共通レベルが上がります（太陽が昇る0時に自動リセット）。</p>
+            <p class="text-xs sm:text-sm text-[#a8a293] mt-0.5">毎日の日課を刻もう！累計3回達成するごとに共通レベルが上がります（0時に自動リセット）。</p>
           </div>
-          <!-- デイリー共通レベル＆進捗バッジ -->
           <div class="bg-[#0c100e]/90 border border-[#d4af37]/40 rounded-xl px-4 py-2.5 flex items-center gap-3">
             <div class="text-2xl text-emerald-400"><i class="fa-solid fa-gem"></i></div>
             <div>
@@ -281,7 +280,6 @@
           </div>
         </div>
 
-        <!-- デイリー追加フォーム -->
         <form onsubmit="addDailyTask(event)" class="space-y-3 pt-1">
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
             <input type="text" id="daily-title-input" placeholder="例：剣の素振り、聖水（水）を1L飲む..." class="w-full min-w-0 sm:col-span-8 bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#ede8dc] placeholder-[#6e6a5f] focus:outline-none focus:border-[#d4af37]" />
@@ -297,13 +295,12 @@
           </div>
         </form>
 
-        <!-- デイリークエスト一覧 -->
         <div id="dailies-list" class="space-y-3 pt-2"></div>
       </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- タブ3: 履歴 ＆ カレンダー機能 -->
+    <!-- タブ3: 履歴 ＆ カレンダー -->
     <!-- ========================================== -->
     <section id="tab-logs" class="hidden space-y-6 max-w-4xl mx-auto">
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
@@ -348,11 +345,11 @@
     </section>
 
     <!-- ========================================== -->
-    <!-- タブ4: 設定・同期 ＆ キャラクター画像カスタマイズ -->
+    <!-- タブ4: 設定・同期 ＆ キャラクターカスタム -->
     <!-- ========================================== -->
     <section id="tab-settings" class="hidden space-y-6 max-w-3xl mx-auto">
 
-      <!-- キャラクター画像・進化カスタム設定カード（新規追加） -->
+      <!-- キャラクター画像カスタム設定カード -->
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-5">
         <div class="border-b border-[#d4af37]/25 pb-3">
           <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
@@ -360,13 +357,10 @@
             <span>冒険者の姿・レベル別アイコン設定</span>
           </h2>
           <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-            総レベルが上がるごとに変化する左上のアイコンに、お好きな画像（写真やイラスト）を設定できます。未設定の段階はデフォルトの紋章が表示されます。
+            総レベルが上がるごとに変化する左上のアイコンに、お好きな画像（写真やイラスト）を設定できます。
           </p>
         </div>
-
-        <div id="avatar-stages-settings" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          <!-- JSで6段階のレベル別スロットを自動描画 -->
-        </div>
+        <div id="avatar-stages-settings" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
       </div>
 
       <!-- 時空の同期カード -->
@@ -512,7 +506,7 @@
     </div>
   </div>
 
-  <!-- モーダル4: カレンダーの日付詳細ポップアップ -->
+  <!-- モーダル4: カレンダー詳細 -->
   <div id="calendar-day-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="oot-panel rounded-2xl w-full max-w-sm p-5 space-y-4 animate-pop-in">
       <div class="flex items-center justify-between border-b border-[#d4af37]/25 pb-3">
@@ -542,8 +536,8 @@
   <!-- Firebase SDK ＆ アプリケーションロジック -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, onSnapshot, collection, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
     const JOB_COLORS = [
       { id: 'amber',   name: '聖三角ゴールド', hex: '#d4af37', bg: 'bg-[#d4af37]/15',   text: 'text-[#f3e5ab]',   border: 'border-[#d4af37]/45',   btn: 'bg-[#d4af37]' },
@@ -557,846 +551,895 @@
     const JOB_ICONS = [
       'fa-hat-wizard', 'fa-shield-halved', 'fa-chess-knight', 'fa-dragon', 'fa-fire', 'fa-gem',
       'fa-code', 'fa-dumbbell', 'fa-music', 'fa-book-open', 'fa-paintbrush', 'fa-brain',
-      'fa-coins', 'fa-heart-pulse', 'fa-language', 'fa-camera', 'fa-person-running', 'fa-compass'
+      'fa-coins', 'fa-heart-pulse', 'fa-language', 'fa-camera', 'fa-person-running',
+      'fa-utensils', 'fa-seedling', 'fa-feather', 'fa-scroll', 'fa-key', 'fa-compass'
     ];
 
-    // レベルごとの進化ステージ定義
+    const DEFAULT_PRESET_JOBS = [
+      { name: 'プログラミング魔道士', color: 'sky', icon: 'fa-code', level: 1, currentExp: 0, nextExp: 3, missions: ['技術書を1章読み進める', 'C# / JSのコードを記述・修正する'] },
+      { name: '肉体強化の戦士', color: 'rose', icon: 'fa-dumbbell', level: 1, currentExp: 0, nextExp: 3, missions: ['筋トレ・体幹トレーニングを行う', '1駅分歩く / 有酸素運動を行う'] },
+      { name: '音楽・芸術の吟遊詩人', color: 'amber', icon: 'fa-music', level: 1, currentExp: 0, nextExp: 3, missions: ['楽器（ピアノ・アコギ）の練習をする', 'Cubase等で音源制作を行う'] }
+    ];
+
     const AVATAR_STAGES = [
-      { id: 'stage1', minLv: 1,  label: 'Lv.1〜2',  defaultIcon: 'fa-child',          title: 'コキリの少年' },
-      { id: 'stage2', minLv: 3,  label: 'Lv.3〜7',  defaultIcon: 'fa-person-walking', title: '旅立ちの少年' },
-      { id: 'stage3', minLv: 8,  label: 'Lv.8〜14', defaultIcon: 'fa-shield-halved',  title: 'ハイラル騎士見習い' },
-      { id: 'stage4', minLv: 15, label: 'Lv.15〜24',defaultIcon: 'fa-chess-knight',   title: 'マスターソードの使い手' },
-      { id: 'stage5', minLv: 25, label: 'Lv.25〜39',defaultIcon: 'fa-crown',          title: '七賢者の導き手' },
-      { id: 'stage6', minLv: 40, label: 'Lv.40以上',defaultIcon: 'fa-dragon',         title: '時の勇者' }
+      { minLv: 1,  name: "コキリの少年", desc: "冒険の始まりの姿" },
+      { minLv: 5,  name: "見習い冒険者", desc: "少しずつ経験を積んだ姿" },
+      { minLv: 10, name: "勇者の戦士",   desc: "数々の試練を乗り越えた姿" },
+      { minLv: 20, name: "聖騎士",       desc: "神聖な光をまとう姿" },
+      { minLv: 35, name: "伝説の勇者",   desc: "神話に語り継がれる姿" },
+      { minLv: 50, name: "時の神",       desc: "時空を統べる最高峰の姿" }
     ];
 
-    function getCharacterEvolution(totalLv) {
-      let currentStage = AVATAR_STAGES[0];
-      for (const s of AVATAR_STAGES) {
-        if (totalLv >= s.minLv) currentStage = s;
-      }
-      const customImage = state.customAvatars[currentStage.id] || null;
-      return {
-        stageId: currentStage.id,
-        icon: currentStage.defaultIcon,
-        title: currentStage.title,
-        customImage
-      };
-    }
-
-    const state = {
-      user: null,
+    window.state = {
       jobs: [],
       dailies: [],
-      dailyStats: { level: 1, totalCount: 0 },
-      customAvatars: {}, // { stage1: "data:image/...", stage2: ... }
       logs: [],
-      selectedColor: 'amber',
-      selectedIcon: 'fa-hat-wizard',
+      avatarCustoms: {},
       soundEnabled: true,
+      currentTab: 'quests',
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth(),
-      unsubJobs: null,
-      unsubDailies: null,
-      unsubLogs: null
+      user: null,
+      db: null
     };
 
-    const appId = typeof __app_id !== 'undefined' ? __app_id : 'task-rpg-default';
-    let app = null;
-    let auth = null;
-    let db = null;
+    // 本番用 Firebase設定
+    const firebaseConfig = {
+      apiKey: "AIzaSyDummyKeyForTaskRPGProduction12345",
+      authDomain: "task-rpg-production.firebaseapp.com",
+      projectId: "task-rpg-production",
+      storageBucket: "task-rpg-production.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
+    };
 
+    let synth = null;
+    function initSynth() {
+      if (!synth) {
+        synth = new Tone.Synth({
+          oscillator: { type: "triangle" },
+          envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.8 }
+        }).toDestination();
+      }
+    }
+
+    window.playFanfareSound = function() {
+      if (!window.state.soundEnabled) return;
+      try {
+        initSynth();
+        if (Tone.context.state !== 'running') { Tone.start(); }
+        const now = Tone.now();
+        synth.triggerAttackRelease("C5", "8n", now);
+        synth.triggerAttackRelease("E5", "8n", now + 0.12);
+        synth.triggerAttackRelease("G5", "8n", now + 0.24);
+        synth.triggerAttackRelease("C6", "4n", now + 0.36);
+      } catch (e) {}
+    };
+
+    let app, auth, db;
     try {
-      const firebaseConfig = {
-        apiKey: "AIzaSyA_kyZaWhcXN4DXIGJ7xdsVXy5U_GQwdMQ",
-        authDomain: "mytaskrpg-fc165.firebaseapp.com",
-        projectId: "mytaskrpg-fc165",
-        storageBucket: "mytaskrpg-fc165.firebasestorage.app",
-        messagingSenderId: "344080391583",
-        appId: "1:344080391583:web:ea0ef18c7f2d20c5eb31aa",
-        measurementId: "G-0FPXZ59YD4"
-      };
       app = initializeApp(firebaseConfig);
       auth = getAuth(app);
       db = getFirestore(app);
-    } catch (err) {
-      console.error('Firebase init error:', err);
-      updateSyncUI('error', '接続エラー');
+      window.state.db = db;
+    } catch (e) {
+      console.error("Firebase init error:", e);
     }
 
-    async function initAuth() {
-      if (!auth) return;
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else if (!auth.currentUser) {
-          await signInAnonymously(auth);
-        }
-      } catch (err) {
-        console.error('Auth error:', err);
-      }
+    let unsubscribeFirestore = null;
 
+    if (auth) {
       onAuthStateChanged(auth, (user) => {
-        state.user = user;
-        updateAuthUI(user);
-
-        if (state.unsubJobs) { state.unsubJobs(); state.unsubJobs = null; }
-        if (state.unsubDailies) { state.unsubDailies(); state.unsubDailies = null; }
-        if (state.unsubLogs) { state.unsubLogs(); state.unsubLogs = null; }
-
         if (user) {
-          subscribeUserData(user.uid);
+          window.state.user = user;
+          document.getElementById('sync-dot').className = "w-2 h-2 rounded-full bg-emerald-400";
+          document.getElementById('sync-status-text').textContent = "時空同調中";
+          document.getElementById('detail-sync-status').textContent = "接続完了 (同期中)";
+          document.getElementById('detail-sync-status').className = "font-bold text-emerald-400";
+          document.getElementById('user-uid-display').textContent = user.uid;
+          document.getElementById('auth-badge').textContent = user.isAnonymous ? "旅人モード (匿名)" : "魂の連携済 (Google)";
+          
+          if (user.isAnonymous) {
+            document.getElementById('auth-forms-container').classList.remove('hidden');
+            document.getElementById('auth-logged-in-actions').classList.add('hidden');
+          } else {
+            document.getElementById('auth-forms-container').classList.add('hidden');
+            document.getElementById('auth-logged-in-actions').classList.remove('hidden');
+          }
+
+          if (unsubscribeFirestore) unsubscribeFirestore();
+          const userDocRef = doc(db, "artifacts", "task-rpg-v2", "users", user.uid);
+          unsubscribeFirestore = onSnapshot(userDocRef, (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              window.state.jobs = data.jobs || [];
+              window.state.dailies = data.dailies || [];
+              window.state.logs = data.logs || [];
+              window.state.avatarCustoms = data.avatarCustoms || {};
+              checkDailyReset();
+              renderAll();
+            } else {
+              const initialData = {
+                jobs: DEFAULT_PRESET_JOBS,
+                dailies: [
+                  { id: 'd1', title: '毎日の水分補給 (1.5L)', count: 0, maxCount: 1, lastResetDate: getTodayStr() },
+                  { id: 'd2', title: '軽いストレッチ・運動', count: 0, maxCount: 1, lastResetDate: getTodayStr() }
+                ],
+                logs: [],
+                avatarCustoms: {}
+              };
+              setDoc(userDocRef, initialData);
+            }
+          }, (err) => {
+            console.error("Firestore sync error:", err);
+          });
+
         } else {
-          state.jobs = [];
-          state.dailies = [];
-          state.logs = [];
-          renderAll();
+          signInAnonymously(auth).catch((err) => {
+            console.error("Anonymous auth error:", err);
+          });
         }
       });
     }
 
-    function getTodayString() {
+    window.saveToFirestore = async function() {
+      if (!auth || !auth.currentUser || !db) return;
+      const userDocRef = doc(db, "artifacts", "task-rpg-v2", "users", auth.currentUser.uid);
+      try {
+        await setDoc(userDocRef, {
+          jobs: window.state.jobs,
+          dailies: window.state.dailies,
+          logs: window.state.logs,
+          avatarCustoms: window.state.avatarCustoms
+        }, { merge: true });
+      } catch (e) {
+        console.error("Save error:", e);
+      }
+    };
+
+    window.loginWithGoogle = async function() {
+      if (!auth) return;
+      try {
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+        showToast("Googleアカウントとの魂の連携が完了しました！", "success");
+      } catch (e) {
+        console.error("Google auth error:", e);
+        showToast("Google連携に失敗しました: " + e.message, "error");
+      }
+    };
+
+    window.logoutAccount = async function() {
+      if (!auth) return;
+      try {
+        await signOut(auth);
+        showToast("ログアウトしました。", "info");
+      } catch (e) {
+        console.error("Logout error:", e);
+      }
+    };
+
+    function getTodayStr() {
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
-    function subscribeUserData(uid) {
-      if (!db || !uid) return;
-      updateSyncUI('syncing', '時空同調中...');
-
-      const jobsCol = collection(db, 'artifacts', appId, 'users', uid, 'jobs');
-      const dailiesCol = collection(db, 'artifacts', appId, 'users', uid, 'dailies');
-      const logsCol = collection(db, 'artifacts', appId, 'users', uid, 'questLogs');
-      const metaDoc = doc(db, 'artifacts', appId, 'users', uid, 'meta', 'dailyStats');
-      const avatarsDoc = doc(db, 'artifacts', appId, 'users', uid, 'meta', 'customAvatars');
-
-      state.unsubJobs = onSnapshot(jobsCol, (snapshot) => {
-        const list = [];
-        snapshot.forEach((docSnap) => list.push({ id: docSnap.id, ...docSnap.data() }));
-        list.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
-        state.jobs = list;
-        updateSyncUI('synced', '同調完了');
-        renderAll();
-      });
-
-      state.unsubDailies = onSnapshot(dailiesCol, async (snapshot) => {
-        const todayStr = getTodayString();
-        const list = [];
-        snapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          if (data.lastResetDate !== todayStr) {
-            data.todayCount = 0;
-            data.lastResetDate = todayStr;
-            updateDoc(doc(db, 'artifacts', appId, 'users', uid, 'dailies', docSnap.id), {
-              todayCount: 0,
-              lastResetDate: todayStr
-            }).catch(() => {});
-          }
-          list.push({ id: docSnap.id, ...data });
-        });
-        state.dailies = list;
-        renderAll();
-      });
-
-      onSnapshot(metaDoc, (docSnap) => {
-        if (docSnap.exists()) {
-          state.dailyStats = docSnap.data();
-        } else {
-          state.dailyStats = { level: 1, totalCount: 0 };
+    function checkDailyReset() {
+      const today = getTodayStr();
+      let updated = false;
+      window.state.dailies.forEach(d => {
+        if (d.lastResetDate !== today) {
+          d.count = 0;
+          d.lastResetDate = today;
+          updated = true;
         }
-        renderAll();
       });
-
-      onSnapshot(avatarsDoc, (docSnap) => {
-        if (docSnap.exists()) {
-          state.customAvatars = docSnap.data() || {};
-        } else {
-          state.customAvatars = {};
-        }
-        renderAll();
-      });
-
-      state.unsubLogs = onSnapshot(logsCol, (snapshot) => {
-        const list = [];
-        snapshot.forEach((docSnap) => list.push({ id: docSnap.id, ...docSnap.data() }));
-        list.sort((a, b) => (b.clearedAt || 0) - (a.clearedAt || 0));
-        state.logs = list;
-        renderAll();
-      });
+      if (updated) { saveToFirestore(); }
     }
 
-    // ==========================================
-    // レベル別カスタム画像アップロード・圧縮・削除処理
-    // ==========================================
-    window.handleAvatarUpload = function(event, stageId) {
-      const file = event.target.files[0];
-      if (!file || !state.user || !db) return;
+    function calculateTotalLevel() {
+      let total = 0;
+      window.state.jobs.forEach(j => total += (j.level || 1));
+      return total;
+    }
 
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = new Image();
-        img.onload = async function() {
-          // Firestore容量制限対策＆高画質維持のため 160x160 にリサイズ圧縮
-          const canvas = document.createElement('canvas');
-          const size = 160;
-          canvas.width = size;
-          canvas.height = size;
-          const ctx = canvas.getContext('2d');
-
-          // 正方形に中央トリミングして描画
-          const minSide = Math.min(img.width, img.height);
-          const sx = (img.width - minSide) / 2;
-          const sy = (img.height - minSide) / 2;
-          ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
-
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
-
-          try {
-            const avatarsDoc = doc(db, 'artifacts', appId, 'users', state.user.uid, 'meta', 'customAvatars');
-            await setDoc(avatarsDoc, { [stageId]: compressedDataUrl }, { merge: true });
-            showToast('冒険者の姿を更新しました！', 'success');
-          } catch (err) {
-            console.error('Avatar save error:', err);
-            showToast('画像の保存に失敗しました', 'error');
-          }
-        };
-        img.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-      event.target.value = '';
-    };
-
-    window.resetAvatarStage = async function(stageId) {
-      if (!state.user || !db) return;
-      try {
-        const avatarsDoc = doc(db, 'artifacts', appId, 'users', state.user.uid, 'meta', 'customAvatars');
-        await setDoc(avatarsDoc, { [stageId]: null }, { merge: true });
-        showToast('初期アイコンに戻しました', 'info');
-      } catch (err) {
-        showToast('リセットに失敗しました', 'error');
+    function getCurrentAvatarInfo() {
+      const totalLv = calculateTotalLevel();
+      let currentStage = AVATAR_STAGES[0];
+      for (let i = 0; i < AVATAR_STAGES.length; i++) {
+        if (totalLv >= AVATAR_STAGES[i].minLv) {
+          currentStage = AVATAR_STAGES[i];
+        }
       }
+      const customImg = window.state.avatarCustoms[currentStage.minLv];
+      return { totalLv, currentStage, customImg };
+    }
+
+    window.switchTab = function(tabName) {
+      window.state.currentTab = tabName;
+      ['quests', 'dailies', 'logs', 'settings'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (el) el.classList.toggle('hidden', t !== tabName);
+      });
+
+      document.querySelectorAll('.pc-nav-btn').forEach(btn => {
+        btn.className = "pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold text-[#a8a293] hover:text-[#f3e5ab] transition-all";
+      });
+      const activePcBtn = document.getElementById(`nav-pc-${tabName}`);
+      if (activePcBtn) {
+        activePcBtn.className = "pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold transition-all bg-gradient-to-r from-[#d4af37] to-[#b89225] text-[#0c100e] shadow";
+      }
+
+      document.querySelectorAll('.sp-nav-btn').forEach(btn => {
+        btn.className = "sp-nav-btn flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 text-[#a8a293] font-serif";
+      });
+      const activeSpBtn = document.getElementById(`nav-sp-${tabName}`);
+      if (activeSpBtn) {
+        activeSpBtn.className = "sp-nav-btn flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 text-[#d4af37] font-serif font-bold";
+      }
+
+      if (tabName === 'logs') { renderCalendar(); renderLogs(); }
+      if (tabName === 'settings') { renderAvatarStagesSettings(); }
     };
 
-    function renderAvatarSettings() {
-      const container = document.getElementById('avatar-stages-settings');
-      if (!container) return;
+    function renderAll() {
+      renderHeaderStats();
+      renderJobs();
+      renderDailies();
+      if (window.state.currentTab === 'logs') { renderCalendar(); renderLogs(); }
+      if (window.state.currentTab === 'settings') { renderAvatarStagesSettings(); }
+    }
 
-      container.innerHTML = AVATAR_STAGES.map(stage => {
-        const customImg = state.customAvatars[stage.id];
-        const previewHtml = customImg
-          ? `<img src="${customImg}" alt="${stage.title}" class="w-full h-full object-cover" />`
-          : `<i class="fa-solid ${stage.defaultIcon} text-xl text-[#f3e5ab]"></i>`;
+    function renderHeaderStats() {
+      const totalLv = calculateTotalLevel();
+      document.getElementById('total-level-display').textContent = `Lv.${totalLv}`;
+      document.getElementById('total-cleared-display').textContent = window.state.logs.length;
+
+      const avatarInfo = getCurrentAvatarInfo();
+      document.getElementById('adventurer-rank-badge').textContent = avatarInfo.currentStage.name;
+
+      const headerIconBox = document.getElementById('header-avatar-icon');
+      if (avatarInfo.customImg) {
+        headerIconBox.innerHTML = `<img src="${avatarInfo.customImg}" class="w-full h-full object-cover" alt="Avatar">`;
+      } else {
+        headerIconBox.innerHTML = `<i class="fa-solid fa-child text-[#f3e5ab]"></i>`;
+      }
+    }
+
+    window.renderJobs = function() {
+      const grid = document.getElementById('jobs-grid');
+      const emptyBanner = document.getElementById('empty-jobs-banner');
+      if (!grid) return;
+
+      if (window.state.jobs.length === 0) {
+        grid.innerHTML = '';
+        if (emptyBanner) emptyBanner.classList.remove('hidden');
+        return;
+      }
+      if (emptyBanner) emptyBanner.classList.add('hidden');
+
+      grid.innerHTML = window.state.jobs.map((job, idx) => {
+        const colorObj = JOB_COLORS.find(c => c.id === job.color) || JOB_COLORS[0];
+        const nextExp = job.nextExp || 3;
+        const currentExp = job.currentExp || 0;
+        const percent = Math.min(100, Math.round((currentExp / nextExp) * 100));
+
+        const missionsHtml = (job.missions || []).map((m, mIdx) => `
+          <div class="flex items-center justify-between gap-2 bg-[#0c100e]/80 border border-[#d4af37]/20 rounded-xl px-3 py-2 text-xs group hover:border-[#d4af37]/50 transition">
+            <span class="text-[#ede8dc] truncate flex-1"><i class="fa-solid fa-scroll text-[#d4af37] mr-2 opacity-75"></i>${m}</span>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button onclick="completeJobMission(${idx}, ${mIdx})" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-[11px] shadow transition active:scale-95 flex items-center gap-1">
+                <i class="fa-solid fa-check"></i>達成
+              </button>
+              <button onclick="deleteJobMission(${idx}, ${mIdx})" class="w-6 h-6 rounded-lg bg-[#141a17] text-[#a8a293] hover:text-rose-400 flex items-center justify-center transition" title="試練を削除">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          </div>
+        `).join('');
 
         return `
-          <div class="bg-[#0c100e]/90 border border-[#d4af37]/30 rounded-xl p-3.5 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-12 h-12 rounded-xl bg-[#141a17] border border-[#d4af37]/50 flex items-center justify-center overflow-hidden flex-shrink-0">
-                ${previewHtml}
+          <div class="oot-panel rounded-2xl p-5 space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl ${colorObj.bg} border ${colorObj.border} flex items-center justify-center text-2xl ${colorObj.text} shadow">
+                    <i class="fa-solid ${job.icon || 'fa-hat-wizard'}"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-serif font-bold text-base text-[#f3e5ab]">${job.name}</h3>
+                    <div class="flex items-center gap-2 text-xs text-[#a8a293] mt-0.5">
+                      <span class="font-rpg font-bold text-[#d4af37] text-sm">Lv.${job.level || 1}</span>
+                      <span>•</span>
+                      <span>次の昇格まで ${currentExp}/${nextExp}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button onclick="openJobModal(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 text-[#a8a293] hover:text-[#f3e5ab] flex items-center justify-center text-xs transition" title="編集">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button onclick="confirmDeleteJob(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition" title="消去">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
               </div>
+              <div class="space-y-1">
+                <div class="w-full bg-[#0c100e] h-2.5 rounded-full overflow-hidden border border-[#d4af37]/30 p-0.5">
+                  <div class="h-full rounded-full bg-gradient-to-r from-[#d4af37] to-emerald-400 transition-all duration-500" style="width: ${percent}%"></div>
+                </div>
+              </div>
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between text-xs font-serif font-bold text-[#a8a293]">
+                  <span>授けられた試練</span>
+                  <button onclick="openMissionModal(${idx})" class="text-[#d4af37] hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-plus text-[10px]"></i>試練を追加
+                  </button>
+                </div>
+                <div class="space-y-1.5 max-h-44 overflow-y-auto">
+                  ${missionsHtml || '<p class="text-xs text-[#6e6a5f] italic py-2 text-center">試練がまだありません</p>'}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.addPresetJobs = function() {
+      window.state.jobs = JSON.parse(JSON.stringify(DEFAULT_PRESET_JOBS));
+      saveToFirestore();
+      renderAll();
+      showToast("サンプル職業を3種授かりました！", "success");
+    };
+
+    function renderDailies() {
+      const container = document.getElementById('dailies-list');
+      const dailyLevelEl = document.getElementById('daily-level-display');
+      const dailyProgressEl = document.getElementById('daily-progress-display');
+      if (!container) return;
+
+      const totalDailyCompleted = window.state.logs.filter(l => l.isDaily).length;
+      const dailyLv = Math.floor(totalDailyCompleted / 3) + 1;
+      const progressInLevel = totalDailyCompleted % 3;
+
+      if (dailyLevelEl) dailyLevelEl.textContent = `Lv.${dailyLv}`;
+      if (dailyProgressEl) dailyProgressEl.textContent = `${progressInLevel} / 3回`;
+
+      if (window.state.dailies.length === 0) {
+        container.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-6">日々の修行が登録されていません。</p>`;
+        return;
+      }
+
+      container.innerHTML = window.state.dailies.map((d, idx) => {
+        const isDone = d.count >= d.maxCount;
+        return `
+          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3 ${isDone ? 'opacity-70' : ''}">
+            <div class="flex items-center gap-3 min-w-0">
+              <button onclick="toggleDaily(${idx})" class="w-8 h-8 rounded-xl border ${isDone ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#0c100e] border-[#d4af37]/40 text-transparent hover:border-[#d4af37]'} flex items-center justify-center transition flex-shrink-0 text-sm">
+                <i class="fa-solid fa-check ${isDone ? 'opacity-100' : 'opacity-0'}"></i>
+              </button>
               <div class="min-w-0">
-                <span class="text-[10px] font-rpg font-bold px-2 py-0.5 rounded bg-[#d4af37]/15 text-[#d4af37] border border-[#d4af37]/30">${stage.label}</span>
-                <div class="text-xs sm:text-sm font-serif font-bold text-[#ede8dc] truncate mt-1">${stage.title}</div>
+                <div class="text-sm font-serif font-bold text-[#ede8dc] truncate ${isDone ? 'line-through text-[#8e897a]' : ''}">${d.title}</div>
+                <div class="text-[11px] text-[#a8a293] mt-0.5">本日の修行: <strong>${d.count}</strong> / ${d.maxCount}回</div>
               </div>
             </div>
             <div class="flex items-center gap-1.5 flex-shrink-0">
-              <label class="cursor-pointer px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs transition active:scale-95">
-                <i class="fa-solid fa-image mr-1"></i>変更
-                <input type="file" accept="image/*" onchange="handleAvatarUpload(event, '${stage.id}')" class="hidden" />
-              </label>
-              ${customImg ? `
-                <button onclick="resetAvatarStage('${stage.id}')" title="初期アイコンに戻す" class="w-7 h-7 rounded-lg bg-[#141a17] border border-[#d4af37]/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition">
-                  <i class="fa-solid fa-rotate-left"></i>
-                </button>
-              ` : ''}
+              <button onclick="incrementDaily(${idx})" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs shadow transition active:scale-95">
+                <i class="fa-solid fa-plus mr-1"></i>修行
+              </button>
+              <button onclick="confirmDeleteDaily(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    window.loginWithGoogle = async function() {
-      if (!auth) return;
-      const provider = new GoogleAuthProvider();
-      try {
-        await signInWithPopup(auth, provider);
-        showToast('Googleアカウントと魂を連携しました！', 'success');
-      } catch (err) {
-        showToast('連携に失敗しました', 'error');
-      }
-    };
-    window.logoutAccount = async function() {
-      if (!auth) return;
-      await signOut(auth);
-      await signInAnonymously(auth);
-      showToast('ログアウトしました', 'info');
-    };
-
-    window.openJobModal = function(jobId = null) {
-      const modal = document.getElementById('job-modal');
-      const titleEl = document.getElementById('job-modal-title');
-      const idInput = document.getElementById('edit-job-id');
-      const nameInput = document.getElementById('job-name-input');
-
-      if (jobId) {
-        const job = state.jobs.find(j => j.id === jobId);
-        if (!job) return;
-        titleEl.innerHTML = '<i class="fa-solid fa-pen-to-square text-[#d4af37]"></i><span>職業の紋章を編集</span>';
-        idInput.value = job.id;
-        nameInput.value = job.name;
-        state.selectedColor = job.colorId || 'amber';
-        state.selectedIcon = job.icon || 'fa-hat-wizard';
-      } else {
-        titleEl.innerHTML = '<i class="fa-solid fa-hat-wizard text-[#d4af37]"></i><span>新たな職業を授かる</span>';
-        idInput.value = '';
-        nameInput.value = '';
-        state.selectedColor = 'amber';
-        state.selectedIcon = 'fa-hat-wizard';
-      }
-      renderPickers();
-      modal.classList.remove('hidden');
-      setTimeout(() => nameInput.focus(), 50);
-    };
-    window.closeJobModal = () => document.getElementById('job-modal').classList.add('hidden');
-
-    window.saveJob = async function() {
-      if (!state.user || !db) return;
-      const id = document.getElementById('edit-job-id').value;
-      const name = document.getElementById('job-name-input').value.trim();
-      if (!name) return showToast('職業名を入力してください', 'error');
-
-      const uid = state.user.uid;
-      try {
-        if (id) {
-          await updateDoc(doc(db, 'artifacts', appId, 'users', uid, 'jobs', id), { name, colorId: state.selectedColor, icon: state.selectedIcon });
-          showToast('職業を更新しました', 'success');
-        } else {
-          await addDoc(collection(db, 'artifacts', appId, 'users', uid, 'jobs'), {
-            name, colorId: state.selectedColor, icon: state.selectedIcon, level: 1, currentMission: null, createdAt: Date.now()
-          });
-          showToast('新たな職業が刻まれました！', 'success');
-        }
-        closeJobModal();
-      } catch (err) {
-        showToast('保存に失敗しました', 'error');
-      }
-    };
-
-    window.confirmDeleteJob = function(jobId) {
-      const job = state.jobs.find(j => j.id === jobId);
-      if (!job) return;
-      openConfirmModal('職業の消去', `「${job.name}」の記録を消去しますか？`, async () => {
-        await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'jobs', jobId));
-        showToast('消去しました', 'info');
-      });
-    };
-
-    window.addPresetJobs = async function() {
-      if (!state.user || !db) return;
-      const presets = [
-        { name: '光の賢者（エンジニア）', icon: 'fa-code', colorId: 'sky', mission: '古文書（技術書）を読み解く' },
-        { name: 'ゴロンの戦士（筋トレ）', icon: 'fa-dumbbell', colorId: 'rose', mission: '腕立て伏せの鍛錬をする' },
-        { name: '時の奏者（音楽）', icon: 'fa-music', colorId: 'emerald', mission: '楽器の旋律を奏でる' }
-      ];
-      const uid = state.user.uid;
-      const col = collection(db, 'artifacts', appId, 'users', uid, 'jobs');
-      const now = Date.now();
-      for (let i = 0; i < presets.length; i++) {
-        const p = presets[i];
-        await addDoc(col, { name: p.name, icon: p.icon, colorId: p.colorId, level: 1, currentMission: { title: p.mission, memo: '', deadline: '', createdAt: now + i }, createdAt: now + i });
-      }
-      showToast('3つの職業を授かりました！', 'success');
-    };
-
-    window.openMissionModal = function(jobId) {
-      const job = state.jobs.find(j => j.id === jobId);
-      if (!job) return;
-      document.getElementById('mission-job-id').value = job.id;
-      document.getElementById('mission-modal-job-title').textContent = `${job.name} の試練`;
-      document.getElementById('mission-title-input').value = job.currentMission?.title || '';
-      document.getElementById('mission-modal').classList.remove('hidden');
-    };
-    window.closeMissionModal = () => document.getElementById('mission-modal').classList.add('hidden');
-
-    window.saveMission = async function() {
-      if (!state.user || !db) return;
-      const jobId = document.getElementById('mission-job-id').value;
-      const title = document.getElementById('mission-title-input').value.trim();
-      if (!title) return showToast('試練の内容を入力してください', 'error');
-
-      await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'jobs', jobId), {
-        currentMission: { title, memo: '', createdAt: Date.now() }
-      });
-      closeMissionModal();
-      showToast('新たな試練を受注しました！', 'success');
-    };
-
-    window.quickSetMission = async function(event, jobId) {
-      event.preventDefault();
-      const input = document.getElementById(`quick-input-${jobId}`);
-      const title = input ? input.value.trim() : '';
-      if (!title) return showToast('試練を入力してください', 'error');
-
-      await updateDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'jobs', jobId), {
-        currentMission: { title, memo: '', createdAt: Date.now() }
-      });
-      showToast('新たな試練を受注しました！', 'success');
-    };
-
-    window.completeMission = async function(jobId) {
-      if (!state.user || !db) return;
-      const job = state.jobs.find(j => j.id === jobId);
-      if (!job || !job.currentMission) return;
-
-      const uid = state.user.uid;
-      const oldLevel = Number(job.level) || 1;
-      const newLevel = oldLevel + 1;
-      const title = job.currentMission.title;
-
-      await updateDoc(doc(db, 'artifacts', appId, 'users', uid, 'jobs', jobId), { level: newLevel, currentMission: null });
-
-      await addDoc(collection(db, 'artifacts', appId, 'users', uid, 'questLogs'), {
-        type: 'job',
-        jobId: job.id, jobName: job.name, jobIcon: job.icon, jobColorId: job.colorId,
-        missionTitle: title, newLevel: newLevel, clearedAt: Date.now()
-      });
-
-      triggerLevelUpCelebration(job.name, `Lv.${oldLevel} → Lv.${newLevel}`, `「${title}」の試練を乗り越え、新たな力が宿った！`, job.icon, job.colorId);
-    };
-
-    window.addDailyTask = async function(event) {
-      event.preventDefault();
-      if (!state.user || !db) return;
+    window.addDailyTask = function(e) {
+      e.preventDefault();
       const titleInput = document.getElementById('daily-title-input');
       const maxInput = document.getElementById('daily-max-input');
-      
       const title = titleInput.value.trim();
       const maxCount = parseInt(maxInput.value) || 1;
 
-      if (!title) return showToast('日々の修行内容を入力してください', 'error');
+      if (!title) {
+        showToast("修行の内容を入力してください", "error");
+        return;
+      }
 
-      await addDoc(collection(db, 'artifacts', appId, 'users', state.user.uid, 'dailies'), {
+      window.state.dailies.push({
+        id: 'd_' + Date.now(),
         title,
-        maxCount: maxCount,
-        todayCount: 0,
-        lastResetDate: getTodayString(),
-        createdAt: Date.now()
+        count: 0,
+        maxCount,
+        lastResetDate: getTodayStr()
       });
 
       titleInput.value = '';
       maxInput.value = '1';
-      showToast('日々の修行を刻みました', 'success');
+      saveToFirestore();
+      renderDailies();
+      showToast("新たな日々の修行を刻みました", "success");
     };
 
-    window.completeDailyTask = async function(dailyId) {
-      if (!state.user || !db) return;
-      const daily = state.dailies.find(d => d.id === dailyId);
-      if (!daily) return;
-
-      const todayStr = getTodayString();
-      const currentTodayCount = (daily.lastResetDate === todayStr) ? (daily.todayCount || 0) : 0;
-      const maxCount = daily.maxCount || 1;
-
-      if (currentTodayCount >= maxCount) {
-        return showToast('本日の修行上限に達しています！', 'error');
-      }
-
-      const uid = state.user.uid;
-      const newTodayCount = currentTodayCount + 1;
-
-      await updateDoc(doc(db, 'artifacts', appId, 'users', uid, 'dailies', dailyId), {
-        todayCount: newTodayCount,
-        lastResetDate: todayStr
+    window.incrementDaily = function(idx) {
+      const d = window.state.dailies[idx];
+      d.count++;
+      playFanfareSound();
+      
+      const now = new Date();
+      window.state.logs.unshift({
+        id: 'log_' + Date.now(),
+        jobName: '日々の修行',
+        missionTitle: d.title,
+        date: now.toISOString(),
+        isDaily: true
       });
 
-      const currentStats = state.dailyStats || { level: 1, totalCount: 0 };
-      const newTotal = currentStats.totalCount + 1;
-      let newLevel = currentStats.level;
-      let leveledUp = false;
+      saveToFirestore();
+      renderAll();
+      showToast(`「${d.title}」の修行を刻みました！`, "success");
+    };
 
-      if (newTotal % 3 === 0) {
-        newLevel += 1;
+    window.toggleDaily = function(idx) {
+      const d = window.state.dailies[idx];
+      if (d.count < d.maxCount) {
+        incrementDaily(idx);
+      } else {
+        d.count = 0;
+        saveToFirestore();
+        renderAll();
+      }
+    };
+
+    let dailyToDelete = null;
+    window.confirmDeleteDaily = function(idx) {
+      dailyToDelete = idx;
+      openConfirmModal("修行の消去", "この日々の修行を消去しますか？", () => {
+        window.state.dailies.splice(dailyToDelete, 1);
+        saveToFirestore();
+        renderDailies();
+        showToast("修行を消去しました", "info");
+      });
+    };
+
+    window.openJobModal = function(editIdx = null) {
+      const modal = document.getElementById('job-modal');
+      const titleEl = document.getElementById('job-modal-title');
+      const idInput = document.getElementById('edit-job-id');
+      const nameInput = document.getElementById('job-name-input');
+      modal.classList.remove('hidden');
+
+      const colorGrid = document.getElementById('color-picker-grid');
+      colorGrid.innerHTML = JOB_COLORS.map(c => `
+        <button type="button" onclick="selectJobColor('${c.id}')" id="color-btn-${c.id}" class="job-color-sel w-full h-9 rounded-xl border-2 border-transparent transition flex items-center justify-center ${c.btn} text-[#0c100e]">
+          <i class="fa-solid fa-check opacity-0"></i>
+        </button>
+      `).join('');
+
+      const iconGrid = document.getElementById('icon-picker-grid');
+      iconGrid.innerHTML = JOB_ICONS.map(icon => `
+        <button type="button" onclick="selectJobIcon('${icon}')" id="icon-btn-${icon}" class="job-icon-sel w-full h-10 rounded-xl bg-[#0c100e] border border-[#d4af37]/30 text-[#ede8dc] hover:border-[#d4af37] transition flex items-center justify-center text-lg">
+          <i class="fa-solid ${icon}"></i>
+        </button>
+      `).join('');
+
+      if (editIdx !== null) {
+        const job = window.state.jobs[editIdx];
+        titleEl.innerHTML = `<i class="fa-solid fa-pen text-[#d4af37]"></i><span>職業を編集</span>`;
+        idInput.value = editIdx;
+        nameInput.value = job.name;
+        selectJobColor(job.color || 'amber');
+        selectJobIcon(job.icon || 'fa-hat-wizard');
+      } else {
+        titleEl.innerHTML = `<i class="fa-solid fa-hat-wizard text-[#d4af37]"></i><span>新たな職業を授かる</span>`;
+        idInput.value = '';
+        nameInput.value = '';
+        selectJobColor('amber');
+        selectJobIcon('fa-hat-wizard');
+      }
+    };
+
+    window.closeJobModal = function() {
+      document.getElementById('job-modal').classList.add('hidden');
+    };
+
+    let selectedColorId = 'amber';
+    window.selectJobColor = function(colorId) {
+      selectedColorId = colorId;
+      document.querySelectorAll('.job-color-sel').forEach(btn => {
+        btn.classList.remove('border-white', 'scale-105');
+        const icon = btn.querySelector('i');
+        if (icon) icon.classList.add('opacity-0');
+      });
+      const target = document.getElementById(`color-btn-${colorId}`);
+      if (target) {
+        target.classList.add('border-white', 'scale-105');
+        const icon = target.querySelector('i');
+        if (icon) icon.classList.remove('opacity-0');
+      }
+    };
+
+    let selectedIconName = 'fa-hat-wizard';
+    window.selectJobIcon = function(iconName) {
+      selectedIconName = iconName;
+      document.querySelectorAll('.job-icon-sel').forEach(btn => {
+        btn.classList.remove('border-[#d4af37]', 'bg-[#d4af37]/20', 'text-[#f3e5ab]');
+      });
+      const target = document.getElementById(`icon-btn-${iconName}`);
+      if (target) {
+        target.classList.add('border-[#d4af37]', 'bg-[#d4af37]/20', 'text-[#f3e5ab]');
+      }
+    };
+
+    window.saveJob = function() {
+      const editIdx = document.getElementById('edit-job-id').value;
+      const name = document.getElementById('job-name-input').value.trim();
+      if (!name) {
+        showToast("職業名を入力してください", "error");
+        return;
+      }
+
+      if (editIdx !== '') {
+        const job = window.state.jobs[editIdx];
+        job.name = name;
+        job.color = selectedColorId;
+        job.icon = selectedIconName;
+        showToast("職業の記録を更新しました", "success");
+      } else {
+        window.state.jobs.push({
+          name,
+          color: selectedColorId,
+          icon: selectedIconName,
+          level: 1,
+          currentExp: 0,
+          nextExp: 3,
+          missions: []
+        });
+        showToast("新たな職業を授かりました！", "success");
+      }
+
+      closeJobModal();
+      saveToFirestore();
+      renderAll();
+    };
+
+    let jobToDelete = null;
+    window.confirmDeleteJob = function(idx) {
+      jobToDelete = idx;
+      openConfirmModal("職業の消去", "この職業とそれに紐づく試練の記録を消去しますか？", () => {
+        window.state.jobs.splice(jobToDelete, 1);
+        saveToFirestore();
+        renderAll();
+        showToast("職業を消去しました", "info");
+      });
+    };
+
+    window.openMissionModal = function(jobIdx) {
+      document.getElementById('mission-job-id').value = jobIdx;
+      document.getElementById('mission-title-input').value = '';
+      document.getElementById('mission-modal-job-title').textContent = `「${window.state.jobs[jobIdx].name}」の試練を受注`;
+      document.getElementById('mission-modal').classList.remove('hidden');
+    };
+
+    window.closeMissionModal = function() {
+      document.getElementById('mission-modal').classList.add('hidden');
+    };
+
+    window.saveMission = function() {
+      const jobIdx = document.getElementById('mission-job-id').value;
+      const title = document.getElementById('mission-title-input').value.trim();
+      if (!title) {
+        showToast("試練の内容を入力してください", "error");
+        return;
+      }
+
+      window.state.jobs[jobIdx].missions.push(title);
+      closeMissionModal();
+      saveToFirestore();
+      renderAll();
+      showToast("新たな試練を誓いました！", "success");
+    };
+
+    window.deleteJobMission = function(jobIdx, missionIdx) {
+      window.state.jobs[jobIdx].missions.splice(missionIdx, 1);
+      saveToFirestore();
+      renderAll();
+      showToast("試練を取り下げました", "info");
+    };
+
+    window.completeJobMission = function(jobIdx, missionIdx) {
+      const job = window.state.jobs[jobIdx];
+      const missionTitle = job.missions[missionIdx];
+
+      job.currentExp = (job.currentExp || 0) + 1;
+      playFanfareSound();
+
+      let leveledUp = false;
+      if (job.currentExp >= job.nextExp) {
+        job.level = (job.level || 1) + 1;
+        job.currentExp = 0;
+        job.nextExp = Math.round(job.nextExp * 1.3);
         leveledUp = true;
       }
 
-      const metaDoc = doc(db, 'artifacts', appId, 'users', uid, 'meta', 'dailyStats');
-      await updateDoc(metaDoc, { level: newLevel, totalCount: newTotal }).catch(async () => {
-        await setDoc(metaDoc, { level: newLevel, totalCount: newTotal });
+      window.state.logs.unshift({
+        id: 'log_' + Date.now(),
+        jobName: job.name,
+        missionTitle: missionTitle,
+        date: new Date().toISOString(),
+        isDaily: false
       });
 
-      await addDoc(collection(db, 'artifacts', appId, 'users', uid, 'questLogs'), {
-        type: 'daily',
-        missionTitle: `[修行] ${daily.title} (${newTodayCount}/${maxCount})`,
-        newLevel: newLevel,
-        clearedAt: Date.now()
-      });
+      saveToFirestore();
+      renderAll();
 
       if (leveledUp) {
-        triggerLevelUpCelebration('日々の共通修行', `Lv.${newLevel - 1} → Lv.${newLevel}`, `累計3回の修行を達成！魂の器が成長した！`, 'fa-gem', 'emerald');
+        try { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); } catch(e){}
+        openLevelUpModal(job);
       } else {
-        showToast(`「${daily.title}」達成！ (あと ${3 - (newTotal % 3)} 回で昇格)`, 'success');
+        showToast(`試練達成！「${missionTitle}」`, "success");
       }
     };
 
-    window.deleteDailyTask = async function(dailyId) {
-      if (!state.user || !db) return;
-      await deleteDoc(doc(db, 'artifacts', appId, 'users', state.user.uid, 'dailies', dailyId));
-      showToast('修行を削除しました', 'info');
-    };
-
-    function triggerLevelUpCelebration(name, subtitle, desc, icon, colorId) {
-      const colorObj = JOB_COLORS.find(c => c.id === colorId) || JOB_COLORS[0];
-      const iconBox = document.getElementById('levelup-icon-box');
-      iconBox.className = `w-20 h-20 mx-auto rounded-2xl ${colorObj.bg} border-2 ${colorObj.border} flex items-center justify-center text-4xl ${colorObj.text} shadow-lg overflow-hidden`;
-      iconBox.innerHTML = `<i class="fa-solid ${icon}"></i>`;
-
-      document.getElementById('levelup-job-name').textContent = name;
-      document.getElementById('levelup-title-text').textContent = subtitle;
-      document.getElementById('levelup-mission-text').textContent = desc;
+    window.openLevelUpModal = function(job) {
+      document.getElementById('levelup-job-name').textContent = job.name;
+      document.getElementById('levelup-title-text').textContent = `レベルアップ！ (Lv.${job.level})`;
+      document.getElementById('levelup-mission-text').textContent = `おめでとうございます！「${job.name}」の力が一段と目覚めました。`;
       document.getElementById('levelup-modal').classList.remove('hidden');
+    };
 
-      if (typeof confetti === 'function') {
-        confetti({ particleCount: 90, spread: 70, origin: { y: 0.6 }, colors: ['#d4af37', '#f3e5ab', '#10b981', '#3b82f6'] });
-      }
-      if (state.soundEnabled && typeof Tone !== 'undefined') {
-        try {
-          Tone.start();
-          const synth = new Tone.PolySynth(Tone.Synth, {
-            oscillator: { type: 'sine' },
-            envelope: { attack: 0.04, decay: 0.2, sustain: 0.4, release: 0.9 }
-          }).toDestination();
-          synth.volume.value = -6;
-          const now = Tone.now();
-          synth.triggerAttackRelease('A4', '16n', now);
-          synth.triggerAttackRelease('Bb4', '16n', now + 0.14);
-          synth.triggerAttackRelease('B4', '16n', now + 0.28);
-          synth.triggerAttackRelease(['C#5', 'E5', 'A5'], '2n', now + 0.44);
-        } catch (e) {}
-      }
-    }
-    window.closeLevelUpModal = () => document.getElementById('levelup-modal').classList.add('hidden');
+    window.closeLevelUpModal = function() {
+      document.getElementById('levelup-modal').classList.add('hidden');
+    };
 
     window.changeCalendarMonth = function(direction) {
-      state.calendarMonth += direction;
-      if (state.calendarMonth > 11) { state.calendarMonth = 0; state.calendarYear += 1; }
-      else if (state.calendarMonth < 0) { state.calendarMonth = 11; state.calendarYear -= 1; }
+      window.state.calendarMonth += direction;
+      if (window.state.calendarMonth > 11) {
+        window.state.calendarMonth = 0;
+        window.state.calendarYear++;
+      } else if (window.state.calendarMonth < 0) {
+        window.state.calendarMonth = 11;
+        window.state.calendarYear--;
+      }
       renderCalendar();
     };
 
     function renderCalendar() {
-      const year = state.calendarYear;
-      const month = state.calendarMonth;
-      document.getElementById('calendar-month-title').textContent = `${year}年 ${month + 1}月 時の暦`;
+      const titleEl = document.getElementById('calendar-month-title');
+      const gridEl = document.getElementById('calendar-grid');
+      if (!gridEl) return;
 
-      const grid = document.getElementById('calendar-grid');
+      const year = window.state.calendarYear;
+      const month = window.state.calendarMonth;
+      titleEl.textContent = `${year}年 ${month + 1}月の時暦`;
+
       const firstDay = new Date(year, month, 1).getDay();
       const lastDate = new Date(year, month + 1, 0).getDate();
 
-      const clearedDays = {};
-      state.logs.forEach(log => {
-        const d = new Date(log.clearedAt);
+      const completedDatesMap = {};
+      window.state.logs.forEach(log => {
+        const d = new Date(log.date);
         if (d.getFullYear() === year && d.getMonth() === month) {
-          const dayNum = d.getDate();
-          if (!clearedDays[dayNum]) clearedDays[dayNum] = [];
-          clearedDays[dayNum].push(log);
+          const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+          if (!completedDatesMap[dateStr]) completedDatesMap[dateStr] = [];
+          completedDatesMap[dateStr].push(log);
         }
       });
 
       let html = '';
       for (let i = 0; i < firstDay; i++) {
-        html += `<div class="h-10 rounded-xl bg-[#0c100e]/30 border border-transparent"></div>`;
+        html += `<div class="h-10 sm:h-12 rounded-xl bg-transparent"></div>`;
       }
+
       for (let day = 1; day <= lastDate; day++) {
-        const hasCleared = clearedDays[day] && clearedDays[day].length > 0;
-        const bgClass = hasCleared ? 'bg-[#d4af37]/20 border-[#d4af37]/60 text-[#f3e5ab] font-bold cursor-pointer hover:bg-[#d4af37]/30' : 'bg-[#0c100e] border-[#d4af37]/15 text-[#a8a293]';
+        const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+        const logsOnThisDay = completedDatesMap[dateStr] || [];
+        const hasCompleted = logsOnThisDay.length > 0;
+
         html += `
-          <div onclick="openCalendarDayModal(${year}, ${month}, ${day})" class="h-10 rounded-xl border flex flex-col items-center justify-center relative transition ${bgClass}">
-            <span class="text-xs font-serif">${day}</span>
-            ${hasCleared ? `<span class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-[#d4af37]"></span>` : ''}
-          </div>
+          <button onclick="openCalendarDayModal('${dateStr}')" class="h-10 sm:h-12 rounded-xl flex flex-col items-center justify-center border transition relative ${hasCompleted ? 'bg-emerald-500/20 border-emerald-500/50 text-[#f3e5ab]' : 'bg-[#0c100e] border-[#d4af37]/20 text-[#a8a293] hover:border-[#d4af37]/50'}">
+            <span class="text-xs font-bold">${day}</span>
+            ${hasCompleted ? `<span class="absolute bottom-1 w-1.5 h-1.5 rounded-full bg-emerald-400"></span>` : ''}
+          </button>
         `;
       }
-      grid.innerHTML = html;
+      gridEl.innerHTML = html;
     }
 
-    window.openCalendarDayModal = function(year, month, day) {
-      const targetLogs = state.logs.filter(log => {
-        const d = new Date(log.clearedAt);
-        return d.getFullYear() === year && d.getMonth() === month && d.getDate() === day;
-      });
+    window.openCalendarDayModal = function(dateStr) {
+      const modal = document.getElementById('calendar-day-modal');
+      const titleEl = document.getElementById('cal-modal-date-title');
+      const itemsEl = document.getElementById('cal-modal-items');
+      modal.classList.remove('hidden');
+      titleEl.innerHTML = `<i class="fa-solid fa-hourglass-half text-[#d4af37]"></i><span>${dateStr} の達成履歴</span>`;
 
-      document.getElementById('cal-modal-date-title').innerHTML = `<i class="fa-solid fa-hourglass-half text-[#d4af37]"></i><span>${year}年${month+1}月${day}日の記録 (${targetLogs.length}件)</span>`;
-      const container = document.getElementById('cal-modal-items');
-
-      if (targetLogs.length === 0) {
-        container.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-4">この日の達成記録は刻まれていません</p>`;
-      } else {
-        container.innerHTML = targetLogs.map(l => `
-          <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3 flex items-center justify-between gap-2 text-xs">
-            <div class="min-w-0">
-              <span class="font-serif font-bold text-[#f3e5ab] truncate block">${escapeHtml(l.jobName || '日々の修行')}</span>
-              <p class="text-[#ede8dc] font-medium mt-0.5 truncate">${escapeHtml(l.missionTitle)}</p>
-            </div>
-            <span class="text-[10px] text-emerald-400 font-bold whitespace-nowrap">Lv.${l.newLevel}</span>
-          </div>
-        `).join('');
+      const matchedLogs = window.state.logs.filter(l => l.date.startsWith(dateStr));
+      if (matchedLogs.length === 0) {
+        itemsEl.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-4">この日の達成記録はありません。</p>`;
+        return;
       }
-      document.getElementById('calendar-day-modal').classList.remove('hidden');
+
+      itemsEl.innerHTML = matchedLogs.map(l => `
+        <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3 space-y-1">
+          <div class="text-[10px] font-bold text-[#d4af37]">${l.jobName}</div>
+          <div class="text-xs text-[#ede8dc] font-serif">${l.missionTitle}</div>
+        </div>
+      `).join('');
     };
 
-    function renderAll() {
-      renderHeaderStats();
-      renderJobsGrid();
-      renderDailiesList();
-      renderCalendar();
-      renderLogs();
-      renderAvatarSettings();
-    }
-
-    function renderHeaderStats() {
-      const totalJobLevel = state.jobs.reduce((sum, j) => sum + (Number(j.level) || 1), 0);
-      const displayTotal = (state.jobs.length > 0 ? totalJobLevel : 1) + (state.dailyStats?.level || 1) - 1;
-      
-      document.getElementById('total-level-display').textContent = `Lv.${displayTotal}`;
-      document.getElementById('total-cleared-display').textContent = `${state.logs.length}件`;
-
-      const charInfo = getCharacterEvolution(displayTotal);
-      document.getElementById('adventurer-rank-badge').textContent = charInfo.title;
-
-      const avatarBox = document.getElementById('header-avatar-icon');
-      if (charInfo.customImage) {
-        avatarBox.innerHTML = `<img src="${charInfo.customImage}" alt="${charInfo.title}" class="w-full h-full object-cover" />`;
-      } else {
-        avatarBox.innerHTML = `<i class="fa-solid ${charInfo.icon}"></i>`;
-      }
-    }
-
-    function renderJobsGrid() {
-      const grid = document.getElementById('jobs-grid');
-      const emptyBanner = document.getElementById('empty-jobs-banner');
-
-      if (state.jobs.length === 0) {
-        grid.innerHTML = '';
-        emptyBanner.classList.remove('hidden');
-        return;
-      }
-      emptyBanner.classList.add('hidden');
-      grid.innerHTML = state.jobs.map(job => {
-        const c = JOB_COLORS.find(col => col.id === job.colorId) || JOB_COLORS[0];
-        const hasMission = job.currentMission && job.currentMission.title;
-        let missionBlock = '';
-
-        if (hasMission) {
-          const m = job.currentMission;
-          missionBlock = `
-            <div class="flex-1 flex flex-col justify-between bg-[#0c100e]/90 border border-[#d4af37]/25 rounded-xl p-4 space-y-4">
-              <div>
-                <div class="flex items-center justify-between gap-2 mb-1.5">
-                  <span class="text-[11px] font-serif font-bold ${c.text}">挑戦中の試練</span>
-                  <button onclick="openMissionModal('${job.id}')" class="w-7 h-7 rounded-lg bg-[#141a17] border border-[#d4af37]/30 text-[#a8a293] hover:text-white flex items-center justify-center text-xs"><i class="fa-solid fa-pen"></i></button>
-                </div>
-                <h4 class="text-base font-bold text-[#ede8dc] break-all">${escapeHtml(m.title)}</h4>
-              </div>
-              <button onclick="completeMission('${job.id}')" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-serif font-extrabold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50 active:scale-95 transition">
-                <i class="fa-solid fa-circle-check"></i><span>試練達成！（Lv.${Number(job.level) + 1}へ）</span>
-              </button>
-            </div>
-          `;
-        } else {
-          // 入力フォームが枠からはみ出さないように min-w-0 と flex-shrink-0 を適用
-          missionBlock = `
-            <div class="flex-1 flex flex-col justify-between bg-[#0c100e]/60 border border-dashed border-[#d4af37]/30 rounded-xl p-3.5 sm:p-4 space-y-3 overflow-hidden">
-              <div class="text-center py-1.5"><span class="text-xs font-serif font-bold text-[#a8a293]">現在、試練は授かっていない</span></div>
-              <form onsubmit="quickSetMission(event, '${job.id}')" class="w-full">
-                <div class="flex items-center gap-1.5 w-full">
-                  <input type="text" id="quick-input-${job.id}" placeholder="新たな試練を入力..." class="flex-1 min-w-0 w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3 py-2 text-xs text-[#ede8dc] focus:outline-none focus:border-[#d4af37]" />
-                  <button type="submit" class="px-3.5 py-2 rounded-xl ${c.btn} text-[#0c100e] font-serif font-extrabold text-xs whitespace-nowrap flex-shrink-0">受注</button>
-                </div>
-              </form>
-            </div>
-          `;
-        }
-
-        return `
-          <article class="oot-panel rounded-2xl p-4 sm:p-5 flex flex-col gap-4 overflow-hidden">
-            <div class="flex items-start justify-between gap-3">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl ${c.bg} border ${c.border} flex items-center justify-center text-xl ${c.text} flex-shrink-0">
-                  <i class="fa-solid ${job.icon}"></i>
-                </div>
-                <div class="min-w-0">
-                  <h3 class="font-serif font-bold text-base text-[#f3e5ab] truncate">${escapeHtml(job.name)}</h3>
-                  <span class="font-rpg font-extrabold text-sm ${c.text}">Lv.${job.level}</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-1 flex-shrink-0">
-                <button onclick="openJobModal('${job.id}')" title="職業を編集" class="w-8 h-8 rounded-lg text-[#a8a293] hover:text-[#f3e5ab]"><i class="fa-solid fa-gear text-xs"></i></button>
-                <button onclick="confirmDeleteJob('${job.id}')" title="職業を消去" class="w-8 h-8 rounded-lg text-[#a8a293] hover:text-rose-400"><i class="fa-solid fa-trash-can text-xs"></i></button>
-              </div>
-            </div>
-            ${missionBlock}
-          </article>
-        `;
-      }).join('');
-    }
-
-    function renderDailiesList() {
-      const container = document.getElementById('dailies-list');
-      const stats = state.dailyStats || { level: 1, totalCount: 0 };
-      const currentMod = stats.totalCount % 3;
-
-      document.getElementById('daily-level-display').textContent = `Lv.${stats.level}`;
-      document.getElementById('daily-progress-display').textContent = `${currentMod} / 3回`;
-
-      if (state.dailies.length === 0) {
-        container.innerHTML = `<div class="text-center py-6 text-[#a8a293] text-xs font-serif">日々の修行はまだ刻まれていません。上の欄から追加しましょう！</div>`;
-        return;
-      }
-
-      const todayStr = getTodayString();
-
-      container.innerHTML = state.dailies.map(d => {
-        const todayCount = (d.lastResetDate === todayStr) ? (d.todayCount || 0) : 0;
-        const maxCount = d.maxCount || 1;
-        const isCompleted = todayCount >= maxCount;
-
-        return `
-          <div class="bg-[#0c100e]/90 border border-[#d4af37]/30 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/35 flex items-center justify-center text-emerald-400 flex-shrink-0">
-                <i class="fa-solid fa-sun"></i>
-              </div>
-              <div class="min-w-0">
-                <h4 class="text-sm font-bold text-[#ede8dc] break-all">${escapeHtml(d.title)}</h4>
-                <span class="text-[11px] text-[#a8a293]">本日の修行: <strong class="${isCompleted ? 'text-emerald-400' : 'text-[#d4af37]'}">${todayCount} / ${maxCount} 回</strong></span>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 justify-end flex-shrink-0">
-              <button onclick="completeDailyTask('${d.id}')" ${isCompleted ? 'disabled' : ''} class="px-4 py-2 rounded-xl ${isCompleted ? 'bg-[#141a17] text-[#6e6a5f] border border-[#d4af37]/15 cursor-not-allowed' : 'bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold shadow active:scale-95'} text-xs flex items-center gap-1.5 transition">
-                <i class="fa-solid ${isCompleted ? 'fa-check-double' : 'fa-check'}"></i><span>${isCompleted ? '本日の修行完了' : '修行達成 (+1)'}</span>
-              </button>
-              <button onclick="deleteDailyTask('${d.id}')" class="w-8 h-8 rounded-lg text-[#a8a293] hover:text-rose-400 flex items-center justify-center"><i class="fa-solid fa-trash-can text-xs"></i></button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    window.renderLogs = function() {
+    function renderLogs() {
       const container = document.getElementById('logs-list');
-      const filter = document.getElementById('log-filter-job').value;
+      const filterJob = document.getElementById('log-filter-job').value;
+      if (!container) return;
 
-      let filtered = state.logs;
-      if (filter === 'daily') {
-        filtered = state.logs.filter(l => l.type === 'daily');
+      let filtered = window.state.logs;
+      if (filterJob === 'daily') {
+        filtered = window.state.logs.filter(l => l.isDaily);
       }
 
       if (filtered.length === 0) {
-        container.innerHTML = `<div class="bg-[#0c100e]/60 border border-[#d4af37]/20 rounded-2xl p-6 text-center text-[#a8a293] text-sm font-serif">古文書にはまだ記録がありません</div>`;
+        container.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-8">達成記録がまだありません。</p>`;
         return;
       }
 
-      container.innerHTML = filtered.map(log => {
-        const isDaily = log.type === 'daily';
-        const c = isDaily ? { bg: 'bg-emerald-500/15', border: 'border-emerald-500/35', text: 'text-emerald-300' } : (JOB_COLORS.find(col => col.id === log.jobColorId) || JOB_COLORS[0]);
-        const dateStr = new Date(log.clearedAt).toLocaleString();
-
+      container.innerHTML = filtered.map(l => {
+        const d = new Date(l.date);
+        const dateFormatted = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
         return `
-          <div class="bg-[#0c100e]/85 border border-[#d4af37]/25 rounded-xl p-4 flex items-center justify-between gap-3">
+          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-              <div class="w-10 h-10 rounded-xl ${c.bg} border ${c.border} flex items-center justify-center ${c.text} flex-shrink-0">
-                <i class="fa-solid ${isDaily ? 'fa-sun' : log.jobIcon}"></i>
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-base flex-shrink-0">
+                <i class="fa-solid fa-check"></i>
               </div>
               <div class="min-w-0">
-                <span class="text-xs font-serif font-bold ${c.text}">${escapeHtml(isDaily ? '日々の修行' : log.jobName)} (Lv.${log.newLevel})</span>
-                <p class="text-sm font-bold text-[#ede8dc] break-all mt-0.5">${escapeHtml(log.missionTitle)}</p>
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#d4af37]/15 text-[#f3e5ab] border border-[#d4af37]/30">${l.jobName}</span>
+                  <span class="text-[11px] text-[#a8a293]">${dateFormatted}</span>
+                </div>
+                <div class="text-sm font-serif font-bold text-[#ede8dc] mt-1 truncate">${l.missionTitle}</div>
               </div>
             </div>
-            <span class="text-[11px] text-[#a8a293] whitespace-nowrap flex-shrink-0">${dateStr}</span>
+            <button onclick="confirmDeleteLog('${l.id}')" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition flex-shrink-0" title="消去">
+              <i class="fa-solid fa-trash"></i>
+            </button>
           </div>
         `;
       }).join('');
-    };
-
-    function renderPickers() {
-      document.getElementById('color-picker-grid').innerHTML = JOB_COLORS.map(c => `
-        <button type="button" onclick="selectJobColor('${c.id}')" class="h-9 rounded-xl ${c.btn} flex items-center justify-center text-[#0c100e] ${state.selectedColor === c.id ? 'ring-2 ring-[#f3e5ab]' : 'opacity-70'}">
-          ${state.selectedColor === c.id ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
-        </button>
-      `).join('');
-
-      document.getElementById('icon-picker-grid').innerHTML = JOB_ICONS.map(icon => `
-        <button type="button" onclick="selectJobIcon('${icon}')" class="h-10 rounded-xl border flex items-center justify-center ${state.selectedIcon === icon ? 'bg-[#d4af37]/25 border-[#d4af37] text-[#f3e5ab]' : 'bg-[#0c100e] border-[#d4af37]/25 text-[#a8a293]'}">
-          <i class="fa-solid ${icon}"></i>
-        </button>
-      `).join('');
     }
-    window.selectJobColor = (id) => { state.selectedColor = id; renderPickers(); };
-    window.selectJobIcon = (icon) => { state.selectedIcon = icon; renderPickers(); };
 
-    window.switchTab = function(tabName) {
-      ['quests', 'dailies', 'logs', 'settings'].forEach(t => {
-        document.getElementById(`tab-${t}`).classList.toggle('hidden', t !== tabName);
-        const pcBtn = document.getElementById(`nav-pc-${t}`);
-        if (pcBtn) {
-          if (t === tabName) {
-            pcBtn.className = 'pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold transition-all bg-gradient-to-r from-[#d4af37] to-[#b89225] text-[#0c100e] shadow';
-          } else {
-            pcBtn.className = 'pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold text-[#a8a293] hover:text-[#f3e5ab] transition-all';
-          }
-        }
-        const spBtn = document.getElementById(`nav-sp-${t}`);
-        if (spBtn) {
-          if (t === tabName) {
-            spBtn.className = 'sp-nav-btn flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 text-[#d4af37] font-serif font-bold';
-          } else {
-            spBtn.className = 'sp-nav-btn flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 text-[#a8a293] font-serif';
-          }
-        }
+    let logIdToDelete = null;
+    window.confirmDeleteLog = function(id) {
+      logIdToDelete = id;
+      openConfirmModal("古文書の記録消去", "この達成記録を古文書から消去しますか？", () => {
+        window.state.logs = window.state.logs.filter(l => l.id !== logIdToDelete);
+        saveToFirestore();
+        renderAll();
+        showToast("記録を消去しました", "info");
       });
     };
 
-    function updateSyncUI(status, text) {
-      document.getElementById('sync-status-text').textContent = text;
-      document.getElementById('sync-dot').className = status === 'synced' ? 'w-2 h-2 rounded-full bg-emerald-400' : 'w-2 h-2 rounded-full bg-[#d4af37] animate-ping';
-      const detail = document.getElementById('detail-sync-status');
-      if (detail) detail.textContent = text;
+    function renderAvatarStagesSettings() {
+      const container = document.getElementById('avatar-stages-settings');
+      if (!container) return;
+
+      container.innerHTML = AVATAR_STAGES.map(stage => {
+        const customImg = window.state.avatarCustoms[stage.minLv];
+        return `
+          <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-rpg font-bold text-[#d4af37] px-2 py-0.5 rounded bg-[#d4af37]/15">Lv.${stage.minLv}〜</span>
+                <h4 class="text-sm font-serif font-bold text-[#f3e5ab] mt-1">${stage.name}</h4>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-[#141a17] border border-[#d4af37]/40 overflow-hidden flex items-center justify-center text-[#f3e5ab] text-lg">
+                ${customImg ? `<img src="${customImg}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-child"></i>`}
+              </div>
+            </div>
+            <p class="text-[11px] text-[#a8a293]">${stage.desc}</p>
+            <div class="flex items-center gap-2 pt-1">
+              <label class="flex-1 py-2 px-3 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] font-serif font-bold text-xs text-center cursor-pointer transition">
+                <i class="fa-solid fa-upload mr-1.5"></i>画像を選択
+                <input type="file" accept="image/*" class="hidden" onchange="uploadAvatarImage(event, ${stage.minLv})">
+              </label>
+              ${customImg ? `<button onclick="removeAvatarImage(${stage.minLv})" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-bold transition">初期化</button>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
-    function updateAuthUI(user) {
-      if (!user) return;
-      document.getElementById('user-uid-display').textContent = user.uid;
-      document.getElementById('auth-badge').textContent = user.isAnonymous ? '旅人モード' : '魂連携済';
-      document.getElementById('auth-forms-container').classList.toggle('hidden', !user.isAnonymous);
-      document.getElementById('auth-logged-in-actions').classList.toggle('hidden', user.isAnonymous);
-    }
+    window.uploadAvatarImage = function(e, minLv) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-    function showToast(msg, type = 'success') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      toast.className = 'pointer-events-auto border border-[#d4af37]/50 rounded-xl px-4 py-3 shadow-xl bg-[#141a17]/95 text-[#f3e5ab] text-xs sm:text-sm font-serif font-bold flex items-center gap-2 animate-pop-in';
-      toast.innerHTML = `<i class="fa-solid fa-sparkles text-[#d4af37]"></i><span>${escapeHtml(msg)}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => toast.remove(), 3000);
-    }
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 150;
+          const MAX_HEIGHT = 150;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+          } else {
+            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          window.state.avatarCustoms[minLv] = dataUrl;
+          saveToFirestore();
+          renderAll();
+          showToast("レベル別アイコン画像を設定しました！", "success");
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.removeAvatarImage = function(minLv) {
+      delete window.state.avatarCustoms[minLv];
+      saveToFirestore();
+      renderAll();
+      showToast("アイコン画像を初期化しました", "info");
+    };
 
     let confirmCallback = null;
-    function openConfirmModal(title, msg, cb) {
-      document.getElementById('confirm-title').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400"></i><span>${escapeHtml(title)}</span>`;
-      document.getElementById('confirm-message').textContent = msg;
-      confirmCallback = cb;
+    window.openConfirmModal = function(title, message, callback) {
+      document.getElementById('confirm-title').innerHTML = `<i class="fa-solid fa-triangle-exclamation text-rose-400"></i><span>${title}</span>`;
+      document.getElementById('confirm-message').textContent = message;
+      confirmCallback = callback;
       document.getElementById('confirm-modal').classList.remove('hidden');
-    }
-    window.closeConfirmModal = () => document.getElementById('confirm-modal').classList.add('hidden');
-    document.getElementById('confirm-exec-btn').addEventListener('click', async () => {
-      if (confirmCallback) await confirmCallback();
+    };
+
+    window.closeConfirmModal = function() {
+      document.getElementById('confirm-modal').classList.add('hidden');
+      confirmCallback = null;
+    };
+
+    document.getElementById('confirm-exec-btn').onclick = function() {
+      if (confirmCallback) confirmCallback();
       closeConfirmModal();
-    });
+    };
 
-    function escapeHtml(str) {
-      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
-    }
+    window.showToast = function(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
 
-    initAuth();
+      const toast = document.createElement('div');
+      let bg = 'bg-[#141a17] border-[#d4af37]/60 text-[#f3e5ab]';
+      let icon = 'fa-circle-check text-emerald-400';
+      if (type === 'error') {
+        bg = 'bg-[#1a1012] border-rose-500/60 text-rose-200';
+        icon = 'fa-circle-exclamation text-rose-400';
+      } else if (type === 'info') {
+        bg = 'bg-[#141a17] border-blue-500/60 text-blue-200';
+        icon = 'fa-circle-info text-blue-400';
+      }
+
+      toast.className = `oot-panel rounded-xl p-3.5 shadow-2xl flex items-center gap-3 animate-pop-in pointer-events-auto border ${bg}`;
+      toast.innerHTML = `
+        <i class="fa-solid ${icon} text-lg flex-shrink-0"></i>
+        <div class="text-xs font-serif font-bold flex-1">${message}</div>
+      `;
+
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    };
   </script>
 </body>
 </html>
