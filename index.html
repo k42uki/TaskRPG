@@ -171,7 +171,7 @@
             </span>
           </div>
           <div class="flex items-center gap-3 text-xs text-[#a8a293] mt-0.5">
-            <span>総レベル: <strong id="total-level-display" class="text-[#d4af37] font-rpg text-sm">Lv.1</strong></span>
+            <span>総レベル: <strong id="total-level-display" class="text-[#d4af37] font-rpg text-sm">Lv.0</strong></span>
             <span>•</span>
             <span>達成記録: <strong id="total-cleared-display" class="text-emerald-400">0</strong></span>
           </div>
@@ -222,7 +222,7 @@
             <i class="fa-solid fa-shield-halved text-[#d4af37]"></i>
             <span>ジョブステータス ＆ 受注した試練</span>
           </h2>
-          <p class="text-xs text-[#a8a293] mt-0.5">職業ごとに試練を授かり、1回達成するごとにその職業のレベルが1上がります。</p>
+          <p class="text-xs text-[#a8a293] mt-0.5">職業ごとに試練を授かり、1回達成するごとにレベルが1上がり、達成した試練は一覧から消えます。</p>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="openJobModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#e5c158] via-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 flex items-center justify-center gap-2">
@@ -267,11 +267,11 @@
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-0.5">毎日の日課を刻もう！累計3回達成するごとに共通レベルが上がります（0時に自動リセット）。</p>
           </div>
-          <div class="bg-[#0c100e]/90 border border-[#d4af37]/40 rounded-xl px-4 py-2.5 flex items-center gap-3">
+          <div class="bg-[#0c100e]/90 border border-[#d4af37]/40 rounded-xl px-4 py-2.5 flex items-center gap-3 flex-shrink-0">
             <div class="text-2xl text-emerald-400"><i class="fa-solid fa-gem"></i></div>
             <div>
               <div class="text-[10px] font-bold text-[#a8a293] uppercase tracking-wider">修行共通Lv</div>
-              <div class="font-rpg font-extrabold text-lg text-[#f3e5ab]" id="daily-level-display">Lv.1</div>
+              <div class="font-rpg font-extrabold text-lg text-[#f3e5ab]" id="daily-level-display">Lv.0</div>
             </div>
             <div class="border-l border-[#d4af37]/25 pl-3 ml-1">
               <div class="text-[10px] font-bold text-[#a8a293]">次の昇格まで</div>
@@ -561,13 +561,13 @@
     ];
 
     const DEFAULT_PRESET_JOBS = [
-      { name: 'プログラミング魔道士', color: 'sky', icon: 'fa-code', level: 1, currentExp: 0, nextExp: 1, missions: ['技術書を1章読み進める', 'C# / JSのコードを記述・修正する'] },
-      { name: '肉体強化の戦士', color: 'rose', icon: 'fa-dumbbell', level: 1, currentExp: 0, nextExp: 1, missions: ['筋トレ・体幹トレーニングを行う', '1駅分歩く / 有酸素運動を行う'] },
-      { name: '音楽・芸術の吟遊詩人', color: 'amber', icon: 'fa-music', level: 1, currentExp: 0, nextExp: 1, missions: ['楽器（ピアノ・アコギ）の練習をする', 'Cubase等で音源制作を行う'] }
+      { name: 'プログラミング魔道士', color: 'sky', icon: 'fa-code', level: 0, currentExp: 0, nextExp: 1, missions: ['技術書を1章読み進める', 'C# / JSのコードを記述・修正する'] },
+      { name: '肉体強化の戦士', color: 'rose', icon: 'fa-dumbbell', level: 0, currentExp: 0, nextExp: 1, missions: ['筋トレ・体幹トレーニングを行う', '1駅分歩く / 有酸素運動を行う'] },
+      { name: '音楽・芸術の吟遊詩人', color: 'amber', icon: 'fa-music', level: 0, currentExp: 0, nextExp: 1, missions: ['楽器（ピアノ・アコギ）の練習をする', 'Cubase等で音源制作を行う'] }
     ];
 
     const DEFAULT_AVATAR_STAGES = [
-      { minLv: 1,  name: "コキリの少年", desc: "冒険の始まりの姿" },
+      { minLv: 0,  name: "コキリの少年", desc: "冒険の始まりの姿" },
       { minLv: 5,  name: "見習い冒険者", desc: "少しずつ経験を積んだ姿" },
       { minLv: 10, name: "勇者の戦士",   desc: "数々の試練を乗り越えた姿" },
       { minLv: 20, name: "聖騎士",       desc: "神聖な光をまとう姿" },
@@ -590,7 +590,7 @@
     };
 
     // ★ここをご自身の本番用Firebaseプロジェクトの値に差し替えてください
-    const firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyA_kyZaWhcXN4DXIGJ7xdsVXy5U_GQwdMQ",
   authDomain: "mytaskrpg-fc165.firebaseapp.com",
   projectId: "mytaskrpg-fc165",
@@ -751,7 +751,7 @@
 
     function calculateTotalLevel() {
       let total = 0;
-      window.state.jobs.forEach(j => total += (j.level || 1));
+      window.state.jobs.forEach(j => total += (typeof j.level === 'number' ? j.level : 0));
       return total;
     }
 
@@ -836,12 +836,13 @@
 
       grid.innerHTML = window.state.jobs.map((job, idx) => {
         const colorObj = JOB_COLORS.find(c => c.id === job.color) || JOB_COLORS[0];
+        const jobLv = typeof job.level === 'number' ? job.level : 0;
 
         const missionsHtml = (job.missions || []).map((m, mIdx) => `
-          <div class="flex items-center justify-between gap-2 bg-[#0c100e]/80 border border-[#d4af37]/20 rounded-xl px-3 py-2 text-xs group hover:border-[#d4af37]/50 transition">
-            <span class="text-[#ede8dc] truncate flex-1"><i class="fa-solid fa-scroll text-[#d4af37] mr-2 opacity-75"></i>${m}</span>
-            <div class="flex items-center gap-1.5 flex-shrink-0">
-              <button onclick="completeJobMission(${idx}, ${mIdx})" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-[11px] shadow transition active:scale-95 flex items-center gap-1">
+          <div class="flex items-start justify-between gap-2 bg-[#0c100e]/80 border border-[#d4af37]/20 rounded-xl px-3 py-2 text-xs group hover:border-[#d4af37]/50 transition">
+            <span class="text-[#ede8dc] break-words whitespace-normal leading-relaxed flex-1 min-w-0"><i class="fa-solid fa-scroll text-[#d4af37] mr-2 opacity-75"></i>${m}</span>
+            <div class="flex items-center gap-1.5 flex-shrink-0 pt-0.5">
+              <button onclick="completeJobMission(${idx}, ${mIdx})" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-[11px] shadow transition active:scale-95 flex items-center gap-1 whitespace-nowrap">
                 <i class="fa-solid fa-check"></i>達成
               </button>
               <button onclick="deleteJobMission(${idx}, ${mIdx})" class="w-6 h-6 rounded-lg bg-[#141a17] text-[#a8a293] hover:text-rose-400 flex items-center justify-center transition" title="試練を削除">
@@ -855,20 +856,20 @@
           <div class="oot-panel rounded-2xl p-5 space-y-4 flex flex-col justify-between">
             <div class="space-y-3">
               <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-xl ${colorObj.bg} border ${colorObj.border} flex items-center justify-center text-2xl ${colorObj.text} shadow">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-12 h-12 rounded-xl ${colorObj.bg} border ${colorObj.border} flex items-center justify-center text-2xl ${colorObj.text} shadow flex-shrink-0">
                     <i class="fa-solid ${job.icon || 'fa-hat-wizard'}"></i>
                   </div>
-                  <div>
-                    <h3 class="font-serif font-bold text-base text-[#f3e5ab]">${job.name}</h3>
+                  <div class="min-w-0">
+                    <h3 class="font-serif font-bold text-base text-[#f3e5ab] break-words">${job.name}</h3>
                     <div class="flex items-center gap-2 text-xs text-[#a8a293] mt-0.5">
-                      <span class="font-rpg font-bold text-[#d4af37] text-sm">Lv.${job.level || 1}</span>
+                      <span class="font-rpg font-bold text-[#d4af37] text-sm">Lv.${jobLv}</span>
                       <span>•</span>
                       <span>試練1回で昇格</span>
                     </div>
                   </div>
                 </div>
-                <div class="flex items-center gap-1">
+                <div class="flex items-center gap-1 flex-shrink-0">
                   <button onclick="openJobModal(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 text-[#a8a293] hover:text-[#f3e5ab] flex items-center justify-center text-xs transition" title="編集">
                     <i class="fa-solid fa-pen"></i>
                   </button>
@@ -898,7 +899,7 @@
       window.state.jobs = JSON.parse(JSON.stringify(DEFAULT_PRESET_JOBS));
       saveToFirestore();
       renderAll();
-      showToast("サンプル職業を3種授かりました！", "success");
+      showToast("サンプル職業を3種（Lv.0）授かりました！", "success");
     };
 
     function renderDailies() {
@@ -908,7 +909,7 @@
       if (!container) return;
 
       const totalDailyCompleted = window.state.logs.filter(l => l.isDaily).length;
-      const dailyLv = Math.floor(totalDailyCompleted / 3) + 1;
+      const dailyLv = Math.floor(totalDailyCompleted / 3);
       const progressInLevel = totalDailyCompleted % 3;
 
       if (dailyLevelEl) dailyLevelEl.textContent = `Lv.${dailyLv}`;
@@ -922,18 +923,18 @@
       container.innerHTML = window.state.dailies.map((d, idx) => {
         const isDone = d.count >= d.maxCount;
         return `
-          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3 ${isDone ? 'opacity-70' : ''}">
-            <div class="flex items-center gap-3 min-w-0">
-              <button onclick="toggleDaily(${idx})" class="w-8 h-8 rounded-xl border ${isDone ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#0c100e] border-[#d4af37]/40 text-transparent hover:border-[#d4af37]'} flex items-center justify-center transition flex-shrink-0 text-sm">
+          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-start justify-between gap-3 ${isDone ? 'opacity-70' : ''}">
+            <div class="flex items-start gap-3 min-w-0 flex-1">
+              <button onclick="toggleDaily(${idx})" class="w-8 h-8 rounded-xl border ${isDone ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#0c100e] border-[#d4af37]/40 text-transparent hover:border-[#d4af37]'} flex items-center justify-center transition flex-shrink-0 text-sm mt-0.5">
                 <i class="fa-solid fa-check ${isDone ? 'opacity-100' : 'opacity-0'}"></i>
               </button>
-              <div class="min-w-0">
-                <div class="text-sm font-serif font-bold text-[#ede8dc] truncate ${isDone ? 'line-through text-[#8e897a]' : ''}">${d.title}</div>
+              <div class="min-w-0 flex-1">
+                <div class="text-sm font-serif font-bold text-[#ede8dc] break-words whitespace-normal leading-relaxed ${isDone ? 'line-through text-[#8e897a]' : ''}">${d.title}</div>
                 <div class="text-[11px] text-[#a8a293] mt-0.5">本日の修行: <strong>${d.count}</strong> / ${d.maxCount}回</div>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 flex-shrink-0">
-              <button onclick="incrementDaily(${idx})" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs shadow transition active:scale-95">
+            <div class="flex items-center gap-1.5 flex-shrink-0 pt-0.5">
+              <button onclick="incrementDaily(${idx})" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs shadow transition active:scale-95 whitespace-nowrap">
                 <i class="fa-solid fa-plus mr-1"></i>修行
               </button>
               <button onclick="confirmDeleteDaily(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition">
@@ -1101,12 +1102,12 @@
           name,
           color: selectedColorId,
           icon: selectedIconName,
-          level: 1,
+          level: 0,
           currentExp: 0,
           nextExp: 1,
           missions: []
         });
-        showToast("新たな職業を授かりました！", "success");
+        showToast("新たな職業（Lv.0）を授かりました！", "success");
       }
 
       closeJobModal();
@@ -1158,12 +1159,13 @@
       showToast("試練を取り下げました", "info");
     };
 
-    // 試練達成（1回達成ごとに必ずレベルアップ）
+    // 試練達成（1回達成ごとにレベルアップし、達成した試練を一覧から消去）
     window.completeJobMission = function(jobIdx, missionIdx) {
       const job = window.state.jobs[jobIdx];
       const missionTitle = job.missions[missionIdx];
 
-      job.level = (job.level || 1) + 1;
+      job.missions.splice(missionIdx, 1);
+      job.level = (typeof job.level === 'number' ? job.level : 0) + 1;
       job.currentExp = 0;
       job.nextExp = 1;
       playFanfareSound();
@@ -1264,7 +1266,7 @@
       itemsEl.innerHTML = matchedLogs.map(l => `
         <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3 space-y-1">
           <div class="text-[10px] font-bold text-[#d4af37]">${l.jobName}</div>
-          <div class="text-xs text-[#ede8dc] font-serif">${l.missionTitle}</div>
+          <div class="text-xs text-[#ede8dc] font-serif break-words">${l.missionTitle}</div>
         </div>
       `).join('');
     };
@@ -1288,17 +1290,17 @@
         const d = new Date(l.date);
         const dateFormatted = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
         return `
-          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3 min-w-0">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-base flex-shrink-0">
+          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-start justify-between gap-3">
+            <div class="flex items-start gap-3 min-w-0 flex-1">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-base flex-shrink-0 mt-0.5">
                 <i class="fa-solid fa-check"></i>
               </div>
-              <div class="min-w-0">
-                <div class="flex items-center gap-2">
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2 flex-wrap">
                   <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#d4af37]/15 text-[#f3e5ab] border border-[#d4af37]/30">${l.jobName}</span>
                   <span class="text-[11px] text-[#a8a293]">${dateFormatted}</span>
                 </div>
-                <div class="text-sm font-serif font-bold text-[#ede8dc] mt-1 truncate">${l.missionTitle}</div>
+                <div class="text-sm font-serif font-bold text-[#ede8dc] mt-1 break-words whitespace-normal leading-relaxed">${l.missionTitle}</div>
               </div>
             </div>
             <button onclick="confirmDeleteLog('${l.id}')" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition flex-shrink-0" title="消去">
@@ -1333,7 +1335,7 @@
               <div class="flex-1 space-y-2">
                 <div class="flex items-center gap-1.5">
                   <span class="text-[11px] font-rpg font-bold text-[#d4af37]">Lv.</span>
-                  <input type="number" min="1" max="999" value="${stage.minLv}" onchange="updateAvatarStage(${idx}, 'minLv', this.value)" class="w-16 bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2 py-1 text-xs font-rpg font-bold text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
+                  <input type="number" min="0" max="999" value="${stage.minLv}" onchange="updateAvatarStage(${idx}, 'minLv', this.value)" class="w-16 bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2 py-1 text-xs font-rpg font-bold text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
                   <span class="text-[11px] text-[#a8a293]">〜</span>
                 </div>
                 <input type="text" value="${stage.name}" placeholder="称号名を入力" onchange="updateAvatarStage(${idx}, 'name', this.value)" class="w-full bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-sm font-serif font-bold text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]" />
@@ -1360,7 +1362,7 @@
       if (!stage) return;
 
       if (field === 'minLv') {
-        const num = Math.max(1, parseInt(value) || 1);
+        const num = Math.max(0, parseInt(value) || 0);
         stage.minLv = num;
       } else if (field === 'name') {
         const trimmed = value.trim();
