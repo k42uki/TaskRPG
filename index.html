@@ -373,16 +373,16 @@
         <div id="avatar-stages-settings" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
       </div>
 
-      <!-- 各効果音カスタム設定カード -->
+      <!-- 各効果音カスタム設定 ＆ 音声ファイル管理カード -->
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
         <div class="flex items-center justify-between gap-2 border-b border-[#d4af37]/25 pb-3">
           <div>
             <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-music text-[#d4af37]"></i>
-              <span>効果音（SE）個別設定</span>
+              <span>効果音（SE）個別設定・MP3追加</span>
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-              シーンごとに効果音の ON/OFF と音色（ファンファーレ・オカリナ風・クリスタル・ベル）を設定できます。
+              MP3などの音声ファイルを追加し、シーンごとに ON/OFF と音源を設定できます（目安: 1ファイル約700KB以下）。
             </p>
           </div>
           <label class="relative inline-flex items-center cursor-pointer flex-shrink-0" title="全体のサウンド有効/無効">
@@ -390,6 +390,22 @@
             <div class="w-11 h-6 bg-[#0c100e] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-[#f3e5ab] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#d4af37]"></div>
           </label>
         </div>
+
+        <!-- 音声ファイル追加・一覧エリア -->
+        <div class="bg-[#0c100e]/85 border border-[#d4af37]/25 rounded-xl p-3.5 space-y-2.5">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-xs font-serif font-bold text-[#f3e5ab]">
+              <i class="fa-solid fa-file-audio text-[#d4af37] mr-1.5"></i>追加した音声ファイル
+            </span>
+            <label class="px-3 py-1.5 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] font-serif font-bold text-xs cursor-pointer transition whitespace-nowrap">
+              <i class="fa-solid fa-plus mr-1"></i>MP3等を追加
+              <input type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/webm,audio/*" class="hidden" onchange="uploadCustomSoundFile(event)">
+            </label>
+          </div>
+          <div id="custom-audio-list" class="space-y-1.5"></div>
+        </div>
+
+        <!-- 各シーンの効果音設定 -->
         <div id="sound-effects-settings" class="space-y-3"></div>
       </div>
 
@@ -614,6 +630,7 @@
       avatarCustoms: {},
       soundEnabled: true,
       soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS)),
+      customSounds: [],
       currentTab: 'quests',
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth(),
@@ -642,12 +659,29 @@ const firebaseConfig = {
       }
     }
 
+    function playCustomAudioById(soundId) {
+      const item = (window.state.customSounds || []).find(s => s.id === soundId);
+      if (!item || !item.dataUrl) return false;
+      try {
+        const audio = new Audio(item.dataUrl);
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
     window.playSoundByEvent = function(eventKey) {
       if (!window.state.soundEnabled) return;
       const cfg = window.state.soundSettings?.[eventKey] || DEFAULT_SOUND_SETTINGS[eventKey];
       if (!cfg || !cfg.enabled) return;
 
       const preset = cfg.preset || 'fanfare';
+      if (preset.startsWith('custom_')) {
+        if (playCustomAudioById(preset)) return;
+      }
+
       try {
         initSynth();
         if (Tone.context.state !== 'running') { Tone.start(); }
@@ -695,14 +729,25 @@ const firebaseConfig = {
       }));
     }
 
+    function normalizeCustomSounds(rawSounds) {
+      if (!Array.isArray(rawSounds)) return [];
+      return rawSounds
+        .filter(s => s && s.id && s.name && s.dataUrl)
+        .map(s => ({ id: s.id, name: s.name, dataUrl: s.dataUrl }));
+    }
+
     function normalizeSoundSettings(rawSound) {
       const merged = JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS));
+      const validCustomIds = new Set((window.state.customSounds || []).map(s => s.id));
+      const validPresetIds = new Set([...SOUND_PRESETS.map(p => p.id), ...validCustomIds]);
+
       if (rawSound && typeof rawSound === 'object') {
         SOUND_EVENTS.forEach(ev => {
           if (rawSound[ev.key]) {
+            const candidate = rawSound[ev.key].preset || merged[ev.key].preset;
             merged[ev.key] = {
               enabled: typeof rawSound[ev.key].enabled === 'boolean' ? rawSound[ev.key].enabled : true,
-              preset: rawSound[ev.key].preset || merged[ev.key].preset
+              preset: validPresetIds.has(candidate) ? candidate : merged[ev.key].preset
             };
           }
         });
@@ -754,6 +799,7 @@ const firebaseConfig = {
               if (typeof data.soundEnabled === 'boolean') {
                 window.state.soundEnabled = data.soundEnabled;
               }
+              window.state.customSounds = normalizeCustomSounds(data.customSounds);
               window.state.soundSettings = normalizeSoundSettings(data.soundSettings);
               checkDailyReset();
               renderAll();
@@ -768,7 +814,8 @@ const firebaseConfig = {
                 avatarStages: JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES)),
                 avatarCustoms: {},
                 soundEnabled: true,
-                soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS))
+                soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS)),
+                customSounds: []
               };
               setDoc(userDocRef, initialData);
             }
@@ -795,10 +842,14 @@ const firebaseConfig = {
           avatarStages: window.state.avatarStages,
           avatarCustoms: window.state.avatarCustoms,
           soundEnabled: window.state.soundEnabled,
-          soundSettings: window.state.soundSettings
+          soundSettings: window.state.soundSettings,
+          customSounds: window.state.customSounds
         }, { merge: true });
       } catch (e) {
         console.error("Save error:", e);
+        if (String(e?.message || '').includes('exceeds the maximum allowed size')) {
+          showToast("データ容量の上限を超えました。音声ファイルを減らしてください。", "error");
+        }
       }
     };
 
@@ -1581,21 +1632,108 @@ const firebaseConfig = {
       showToast("アイコン画像を消去しました", "info");
     };
 
+    // 音声ファイル追加・削除
+    window.uploadCustomSoundFile = function(e) {
+      const file = e.target.files?.[0];
+      e.target.value = '';
+      if (!file) return;
+
+      const MAX_BYTES = 700 * 1024; // 約700KB（Firestoreドキュメント上限対策）
+      if (file.size > MAX_BYTES) {
+        showToast("ファイルサイズが大きすぎます（約700KB以下の短い音声をお試しください）", "error");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const dataUrl = event.target?.result;
+        if (!dataUrl || typeof dataUrl !== 'string') {
+          showToast("音声ファイルの読み込みに失敗しました", "error");
+          return;
+        }
+        const id = `custom_${Date.now()}`;
+        const cleanName = file.name.replace(/\.[^/.]+$/, '') || 'カスタム音声';
+        window.state.customSounds = normalizeCustomSounds([
+          ...(window.state.customSounds || []),
+          { id, name: cleanName, dataUrl }
+        ]);
+        saveToFirestore();
+        renderSoundSettings();
+        showToast(`音声「${cleanName}」を追加しました！`, "success");
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.deleteCustomSoundFile = function(soundId) {
+      const target = (window.state.customSounds || []).find(s => s.id === soundId);
+      if (!target) return;
+
+      openConfirmModal("音声ファイルの削除", `音声「${target.name}」を削除しますか？設定中のシーンは既定の音色に戻ります。`, () => {
+        window.state.customSounds = (window.state.customSounds || []).filter(s => s.id !== soundId);
+        SOUND_EVENTS.forEach(ev => {
+          if (window.state.soundSettings?.[ev.key]?.preset === soundId) {
+            window.state.soundSettings[ev.key].preset = DEFAULT_SOUND_SETTINGS[ev.key].preset;
+          }
+        });
+        saveToFirestore();
+        renderSoundSettings();
+        showToast("音声ファイルを削除しました", "info");
+      });
+    };
+
     // 効果音個別設定の描画・更新
     function renderSoundSettings() {
+      const customListEl = document.getElementById('custom-audio-list');
       const container = document.getElementById('sound-effects-settings');
       const masterToggle = document.getElementById('sound-toggle');
       if (masterToggle) masterToggle.checked = Boolean(window.state.soundEnabled);
+
+      const customSounds = normalizeCustomSounds(window.state.customSounds);
+      window.state.customSounds = customSounds;
+
+      if (customListEl) {
+        if (customSounds.length === 0) {
+          customListEl.innerHTML = `<p class="text-[11px] text-[#6e6a5f]">追加された音声ファイルはありません（内蔵音色を利用中）。</p>`;
+        } else {
+          customListEl.innerHTML = customSounds.map(s => `
+            <div class="flex items-center justify-between gap-2 bg-[#141a17] border border-[#d4af37]/25 rounded-lg px-3 py-1.5 text-xs">
+              <span class="text-[#ede8dc] truncate"><i class="fa-solid fa-volume-high text-emerald-400 mr-1.5"></i>${s.name}</span>
+              <div class="flex items-center gap-1.5 flex-shrink-0">
+                <button type="button" onclick="previewSoundPreset('${s.id}')" class="px-2 py-1 rounded bg-[#1b241f] hover:bg-[#232f28] text-[#f3e5ab] text-[11px] font-bold transition">
+                  <i class="fa-solid fa-play mr-1"></i>再生
+                </button>
+                <button type="button" onclick="deleteCustomSoundFile('${s.id}')" class="w-6 h-6 rounded bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 flex items-center justify-center text-[11px] transition" title="削除">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
       if (!container) return;
 
       const settings = normalizeSoundSettings(window.state.soundSettings);
       window.state.soundSettings = settings;
 
+      const presetGroupsHtml = `
+        <optgroup label="内蔵音色">
+          ${SOUND_PRESETS.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+        </optgroup>
+        ${customSounds.length > 0 ? `
+          <optgroup label="追加した音声ファイル">
+            ${customSounds.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+          </optgroup>
+        ` : ''}
+      `;
+
       container.innerHTML = SOUND_EVENTS.map(ev => {
         const cfg = settings[ev.key];
-        const optionsHtml = SOUND_PRESETS.map(p =>
-          `<option value="${p.id}" ${cfg.preset === p.id ? 'selected' : ''}>${p.name}</option>`
-        ).join('');
+        const tempDiv = document.createElement('select');
+        tempDiv.innerHTML = presetGroupsHtml;
+        Array.from(tempDiv.querySelectorAll('option')).forEach(opt => {
+          if (opt.value === cfg.preset) opt.selected = true;
+        });
 
         return `
           <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${!window.state.soundEnabled ? 'opacity-60' : ''}">
@@ -1604,8 +1742,8 @@ const firebaseConfig = {
               <div class="text-[11px] text-[#a8a293] mt-0.5">${ev.desc}</div>
             </div>
             <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <select onchange="updateSoundEffectPreset('${ev.key}', this.value)" class="bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-xs text-[#ede8dc] focus:outline-none focus:border-[#d4af37]">
-                ${optionsHtml}
+              <select onchange="updateSoundEffectPreset('${ev.key}', this.value)" class="max-w-[200px] bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-xs text-[#ede8dc] focus:outline-none focus:border-[#d4af37]">
+                ${tempDiv.innerHTML}
               </select>
               <button type="button" onclick="previewSoundEffect('${ev.key}')" class="px-2.5 py-1.5 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] text-xs font-bold transition whitespace-nowrap" title="試聴">
                 <i class="fa-solid fa-play mr-1"></i>試聴
@@ -1639,19 +1777,31 @@ const firebaseConfig = {
       window.state.soundSettings[eventKey].preset = presetId;
       saveToFirestore();
       window.playSoundByEvent(eventKey);
-      showToast("効果音の音色を変更しました", "success");
+      showToast("効果音の音源を変更しました", "success");
+    };
+
+    window.previewSoundPreset = function(presetId) {
+      if (presetId.startsWith('custom_')) {
+        playCustomAudioById(presetId);
+        return;
+      }
+      const prevMaster = window.state.soundEnabled;
+      window.state.soundEnabled = true;
+      const tempSettings = normalizeSoundSettings(window.state.soundSettings);
+      const prevPreset = tempSettings.missionClear.preset;
+      const prevEnabled = tempSettings.missionClear.enabled;
+      tempSettings.missionClear.preset = presetId;
+      tempSettings.missionClear.enabled = true;
+      window.state.soundSettings = tempSettings;
+      window.playSoundByEvent('missionClear');
+      tempSettings.missionClear.preset = prevPreset;
+      tempSettings.missionClear.enabled = prevEnabled;
+      window.state.soundEnabled = prevMaster;
     };
 
     window.previewSoundEffect = function(eventKey) {
-      const prevMaster = window.state.soundEnabled;
       const settings = normalizeSoundSettings(window.state.soundSettings);
-      const prevItemEnabled = settings[eventKey].enabled;
-      window.state.soundEnabled = true;
-      settings[eventKey].enabled = true;
-      window.state.soundSettings = settings;
-      window.playSoundByEvent(eventKey);
-      window.state.soundEnabled = prevMaster;
-      settings[eventKey].enabled = prevItemEnabled;
+      window.previewSoundPreset(settings[eventKey].preset);
     };
 
     let confirmCallback = null;
