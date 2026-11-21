@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="タスクRPG - 時の記録" />
-  <title>タスクRPG - 時の冒険録</title>
+  <title>タスクRPG</title>
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -181,16 +181,16 @@
       <!-- PC用ナビゲーションタブ -->
       <nav class="hidden md:flex items-center bg-[#141a17] p-1 rounded-xl border border-[#d4af37]/30">
         <button onclick="switchTab('quests')" id="nav-pc-quests" class="pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold transition-all bg-gradient-to-r from-[#d4af37] to-[#b89225] text-[#0c100e] shadow">
-          <i class="fa-solid fa-swords mr-1"></i>職業・試練
+          <i class="fa-solid fa-swords mr-1"></i>試練
         </button>
         <button onclick="switchTab('dailies')" id="nav-pc-dailies" class="pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold text-[#a8a293] hover:text-[#f3e5ab] transition-all">
-          <i class="fa-solid fa-sun mr-1"></i>日々の修行
+          <i class="fa-solid fa-sun mr-1"></i>修行
         </button>
         <button onclick="switchTab('logs')" id="nav-pc-logs" class="pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold text-[#a8a293] hover:text-[#f3e5ab] transition-all">
-          <i class="fa-solid fa-hourglass-half mr-1"></i>時の記録・暦
+          <i class="fa-solid fa-hourglass-half mr-1"></i>記録
         </button>
         <button onclick="switchTab('settings')" id="nav-pc-settings" class="pc-nav-btn px-3.5 py-2 rounded-lg text-xs font-serif font-bold text-[#a8a293] hover:text-[#f3e5ab] transition-all">
-          <i class="fa-solid fa-compass mr-1"></i>同期・設定
+          <i class="fa-solid fa-compass mr-1"></i>設定
         </button>
       </nav>
 
@@ -222,11 +222,11 @@
             <i class="fa-solid fa-shield-halved text-[#d4af37]"></i>
             <span>ジョブステータス ＆ 受注した試練</span>
           </h2>
-          <p class="text-xs text-[#a8a293] mt-0.5">職業ごとに試練を授かり、1回達成するごとにレベルが1上がり、達成した試練は一覧から消えます。</p>
+          <p class="text-xs text-[#a8a293] mt-0.5">職業ごとに試練を設定し達成する。</p>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="openJobModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#e5c158] via-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 flex items-center justify-center gap-2">
-            <i class="fa-solid fa-plus"></i><span>新たな職業を授かる</span>
+            <i class="fa-solid fa-plus"></i><span>新たな職業を登録</span>
           </button>
         </div>
       </div>
@@ -238,7 +238,7 @@
         </div>
         <div class="max-w-md mx-auto">
           <h3 class="text-lg font-serif font-bold text-[#f3e5ab]">まだ職業が刻まれていません</h3>
-          <p class="text-sm text-[#a8a293] mt-1">サンプル職業3種を一括で授かるか、自らの手で職業を創り出して冒険を始めましょう！</p>
+          <p class="text-sm text-[#a8a293] mt-1">サンプル職業3種を一括で授かるか、自らの手で職業を創り出して冒険を始める！</p>
         </div>
         <div class="flex flex-wrap items-center justify-center gap-2.5 pt-2">
           <button onclick="addPresetJobs()" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-serif font-bold text-sm shadow-lg shadow-emerald-900/40 transition active:scale-95">
@@ -265,7 +265,7 @@
               <i class="fa-solid fa-sun text-[#d4af37]"></i>
               <span>日々の修行場（デイリー試練）</span>
             </h2>
-            <p class="text-xs sm:text-sm text-[#a8a293] mt-0.5">毎日の日課を刻もう！累計3回達成するごとに共通レベルが上がります（0時に自動リセット）。</p>
+            <p class="text-xs sm:text-sm text-[#a8a293] mt-0.5">毎日の日課を追加！累計3回達成するごとに共通レベルがUP！（0時に自動リセット）。</p>
           </div>
           <div class="bg-[#0c100e]/90 border border-[#d4af37]/40 rounded-xl px-4 py-2.5 flex items-center gap-3 flex-shrink-0">
             <div class="text-2xl text-emerald-400"><i class="fa-solid fa-gem"></i></div>
@@ -307,7 +307,7 @@
         <div class="flex items-center justify-between">
           <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
             <i class="fa-solid fa-hourglass-half text-[#d4af37]"></i>
-            <span id="calendar-month-title">時の暦（達成カレンダー）</span>
+            <span id="calendar-month-title">達成カレンダー</span>
           </h2>
           <div class="flex items-center gap-1.5">
             <button onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition">
@@ -329,14 +329,14 @@
           <div>
             <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-scroll text-emerald-400"></i>
-              <span>冒険の古文書（全達成記録）</span>
+              <span>全達成記録</span>
             </h2>
-            <p class="text-xs text-[#a8a293] mt-0.5">これまでに刻んだ試練達成の軌跡です。</p>
+            <p class="text-xs text-[#a8a293] mt-0.5">これまで達成した試練。</p>
           </div>
           <div>
             <select id="log-filter-job" onchange="renderLogs()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-[#d4af37]">
               <option value="all">すべての記録</option>
-              <option value="daily">日々の修行のみ</option>
+              <option value="daily">修行のみ</option>
             </select>
           </div>
         </div>
@@ -355,10 +355,10 @@
           <div>
             <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-user-astronaut text-[#d4af37]"></i>
-              <span>冒険者の姿・レベル別アイコン設定</span>
+              <span>レベル別称号設定</span>
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-              段階の追加・削除や、「必要総レベル」「称号名」「透過アイコン画像」を自由に設定できます。
+              段階の追加・削除や、「必要総レベル」「称号名」「透過アイコン画像」を自由に設定。
             </p>
           </div>
           <div class="flex items-center gap-2 flex-shrink-0">
