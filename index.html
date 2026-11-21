@@ -138,6 +138,11 @@
     .tri-bl { position: absolute; bottom: 0; left: 0; }
     .tri-br { position: absolute; bottom: 0; right: 0; }
 
+    input[type="month"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.8) sepia(0.5) saturate(3) hue-rotate(5deg);
+      cursor: pointer;
+    }
+
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0c100e; }
     ::-webkit-scrollbar-thumb { background: #3a3322; border-radius: 9999px; }
@@ -216,20 +221,32 @@
     <!-- タブ1: 職業クエスト -->
     <!-- ========================================== -->
     <section id="tab-quests" class="space-y-6">
-      <div class="oot-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-[#d4af37]"></i>
-            <span>ジョブステータス ＆ 受注した試練</span>
-          </h2>
-          <p class="text-xs text-[#a8a293] mt-0.5">カテゴリごとに職業を整理し、試練を1回達成するごとにレベルが1上がります。</p>
-        </div>
-        <div class="flex items-center gap-2 flex-wrap">
-          <select id="job-category-filter" onchange="renderJobs()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-[#d4af37]">
-            <option value="all">すべてのカテゴリ</option>
-          </select>
-          <button onclick="openJobModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#e5c158] via-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 flex items-center justify-center gap-2">
+      <div class="oot-panel rounded-2xl p-4 sm:p-5 space-y-3.5">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-[#d4af37]"></i>
+              <span>ジョブステータス ＆ 受注した試練</span>
+            </h2>
+            <p class="text-xs text-[#a8a293] mt-0.5">カテゴリごとに職業を整理し、試練を1回達成するごとにレベルが1上がります。</p>
+          </div>
+          <button onclick="openJobModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#e5c158] via-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 flex items-center justify-center gap-2 flex-shrink-0">
             <i class="fa-solid fa-plus"></i><span>新たな職業を授かる</span>
+          </button>
+        </div>
+
+        <!-- 職業フィルターバー -->
+        <div class="bg-[#0c100e]/85 border border-[#d4af37]/20 rounded-xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-serif font-bold text-[#a8a293] flex items-center gap-1.5">
+              <i class="fa-solid fa-filter text-[#d4af37] text-[11px]"></i>カテゴリ絞り込み
+            </span>
+            <select id="job-category-filter" onchange="renderJobs()" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#d4af37]">
+              <option value="all">すべてのカテゴリ</option>
+            </select>
+          </div>
+          <button type="button" onclick="quickCreateCategoryPrompt()" class="text-xs font-serif font-bold text-[#d4af37] hover:text-[#f3e5ab] transition flex items-center gap-1">
+            <i class="fa-solid fa-tag text-[11px]"></i>＋ 新規カテゴリ作成
           </button>
         </div>
       </div>
@@ -284,29 +301,43 @@
         </div>
 
         <form onsubmit="addDailyTask(event)" class="space-y-3 pt-1">
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
-            <input type="text" id="daily-title-input" placeholder="例：剣の素振り、聖水（水）を1L飲む..." class="w-full min-w-0 sm:col-span-5 bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#ede8dc] placeholder-[#6e6a5f] focus:outline-none focus:border-[#d4af37]" />
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
+            <div class="sm:col-span-5">
+              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">修行の内容</label>
+              <input type="text" id="daily-title-input" placeholder="例：剣の素振り、聖水（水）を1L飲む..." class="w-full min-w-0 bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2 text-sm text-[#ede8dc] placeholder-[#6e6a5f] focus:outline-none focus:border-[#d4af37]" />
+            </div>
             <div class="sm:col-span-3">
-              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">カテゴリ</label>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-[10px] font-bold text-[#a8a293]">カテゴリ</label>
+                <button type="button" onclick="quickCreateCategoryPrompt('daily-category-select')" class="text-[10px] font-bold text-[#d4af37] hover:underline">＋新規</button>
+              </div>
               <select id="daily-category-select" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-2.5 py-2 text-xs sm:text-sm text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]"></select>
             </div>
             <div class="sm:col-span-4 flex items-center gap-2">
-              <div class="flex-1 min-w-0">
-                <label class="block text-[10px] font-bold text-[#a8a293] mb-1">1日の上限</label>
-                <input type="number" id="daily-max-input" value="1" min="1" max="99" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-2.5 py-2 text-sm text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
+              <div class="w-20 flex-shrink-0">
+                <label class="block text-[10px] font-bold text-[#a8a293] mb-1">1日上限</label>
+                <input type="number" id="daily-max-input" value="1" min="1" max="99" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-2 py-2 text-sm text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
               </div>
-              <button type="submit" class="mt-4 px-4 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs sm:text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 whitespace-nowrap h-[38px] flex-shrink-0">
+              <button type="submit" class="flex-1 px-4 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs sm:text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 whitespace-nowrap h-[38px]">
                 <i class="fa-solid fa-plus mr-1"></i>追加
               </button>
             </div>
           </div>
         </form>
 
-        <div class="flex items-center justify-between gap-2 pt-1">
-          <span class="text-xs font-serif font-bold text-[#a8a293]">修行グループ表示</span>
-          <select id="daily-category-filter" onchange="renderDailies()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#d4af37]">
-            <option value="all">すべてのカテゴリ</option>
-          </select>
+        <!-- 修行グループフィルターバー -->
+        <div class="bg-[#0c100e]/85 border border-[#d4af37]/20 rounded-xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="text-xs font-serif font-bold text-[#a8a293] flex items-center gap-1.5">
+              <i class="fa-solid fa-filter text-emerald-400 text-[11px]"></i>グループ絞り込み
+            </span>
+            <select id="daily-category-filter" onchange="renderDailies()" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#d4af37]">
+              <option value="all">すべてのカテゴリ</option>
+            </select>
+          </div>
+          <button type="button" onclick="quickCreateCategoryPrompt('daily-category-filter')" class="text-xs font-serif font-bold text-[#d4af37] hover:text-[#f3e5ab] transition flex items-center gap-1">
+            <i class="fa-solid fa-tag text-[11px]"></i>＋ 新規カテゴリ作成
+          </button>
         </div>
 
         <div id="dailies-list" class="space-y-5 pt-1"></div>
@@ -318,14 +349,19 @@
     <!-- ========================================== -->
     <section id="tab-logs" class="hidden space-y-6 max-w-4xl mx-auto">
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-[#d4af37]/20 pb-3.5">
           <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
             <i class="fa-solid fa-hourglass-half text-[#d4af37]"></i>
             <span id="calendar-month-title">時の暦（達成カレンダー）</span>
           </h2>
-          <div class="flex items-center gap-1.5 flex-wrap">
-            <select id="calendar-year-select" onchange="onCalendarYearMonthChange()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#d4af37]"></select>
-            <select id="calendar-month-select" onchange="onCalendarYearMonthChange()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#d4af37]">
+
+          <!-- 年月選択ツールバー -->
+          <div class="bg-[#0c100e]/90 border border-[#d4af37]/30 rounded-xl p-1.5 flex items-center gap-1.5 flex-wrap">
+            <button type="button" onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-lg bg-[#141a17] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition" title="前月">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <select id="calendar-year-select" onchange="onCalendarYearMonthChange()" aria-label="年を選択" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#d4af37]"></select>
+            <select id="calendar-month-select" onchange="onCalendarYearMonthChange()" aria-label="月を選択" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#d4af37]">
               <option value="0">1月</option>
               <option value="1">2月</option>
               <option value="2">3月</option>
@@ -339,17 +375,16 @@
               <option value="10">11月</option>
               <option value="11">12月</option>
             </select>
-            <button onclick="jumpCalendarToToday()" class="px-2.5 py-1.5 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] text-xs font-bold transition">
+            <input type="month" id="calendar-month-picker" onchange="onCalendarMonthPickerChange(this.value)" aria-label="年月ピッカー" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37]" />
+            <button type="button" onclick="jumpCalendarToToday()" class="px-2.5 py-1.5 rounded-lg bg-[#d4af37]/20 hover:bg-[#d4af37]/30 border border-[#d4af37]/45 text-[#f3e5ab] text-xs font-serif font-bold transition whitespace-nowrap">
               今月
             </button>
-            <button onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition" title="前月">
-              <i class="fa-solid fa-chevron-left"></i>
-            </button>
-            <button onclick="changeCalendarMonth(1)" class="w-8 h-8 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition" title="翌月">
+            <button type="button" onclick="changeCalendarMonth(1)" class="w-8 h-8 rounded-lg bg-[#141a17] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition" title="翌月">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
         </div>
+
         <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-serif font-bold text-[#a8a293] pb-1 border-b border-[#d4af37]/25">
           <span class="text-rose-400">日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span class="text-sky-400">土</span>
         </div>
@@ -357,7 +392,7 @@
       </div>
 
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="space-y-3">
           <div>
             <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-scroll text-emerald-400"></i>
@@ -365,18 +400,32 @@
             </h2>
             <p class="text-xs text-[#a8a293] mt-0.5">年月やカテゴリを指定して、これまでに刻んだ試練達成の軌跡を振り返れます。</p>
           </div>
-          <div class="flex items-center gap-2 flex-wrap">
-            <select id="log-filter-month" onchange="renderLogs()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-[#d4af37]">
-              <option value="all">すべての年月</option>
-            </select>
-            <select id="log-filter-category" onchange="renderLogs()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-[#d4af37]">
-              <option value="all">すべてのカテゴリ</option>
-            </select>
-            <select id="log-filter-job" onchange="renderLogs()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-[#d4af37]">
-              <option value="all">すべての種別</option>
-              <option value="job">職業試練のみ</option>
-              <option value="daily">日々の修行のみ</option>
-            </select>
+
+          <!-- 達成履歴フィルターバー -->
+          <div class="bg-[#0c100e]/85 border border-[#d4af37]/25 rounded-xl p-3 grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end">
+            <div>
+              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">達成年月</label>
+              <select id="log-filter-month" onchange="renderLogs()" class="w-full bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#d4af37]">
+                <option value="all">すべての年月</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">カテゴリ</label>
+              <select id="log-filter-category" onchange="renderLogs()" class="w-full bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#d4af37]">
+                <option value="all">すべてのカテゴリ</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">記録の種別</label>
+              <select id="log-filter-job" onchange="renderLogs()" class="w-full bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#d4af37]">
+                <option value="all">すべての種別</option>
+                <option value="job">職業試練のみ</option>
+                <option value="daily">日々の修行のみ</option>
+              </select>
+            </div>
+            <button type="button" onclick="resetLogFilters()" class="w-full py-2 px-3 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/35 text-[#d6d0c2] hover:text-[#f3e5ab] text-xs font-bold transition flex items-center justify-center gap-1.5">
+              <i class="fa-solid fa-rotate-left text-[11px]"></i><span>条件リセット</span>
+            </button>
           </div>
         </div>
         <div id="logs-list" class="space-y-3"></div>
@@ -393,19 +442,19 @@
         <div class="border-b border-[#d4af37]/25 pb-3">
           <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
             <i class="fa-solid fa-tags text-[#d4af37]"></i>
-            <span>カテゴリ管理（職業・修行・履歴共通）</span>
+            <span>カテゴリ管理（作成・名前編集・削除）</span>
           </h2>
           <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-            グループ分けに使うカテゴリを追加・削除できます。
+            職業・日々の修行・達成履歴のグループ分けに使うカテゴリを自由に作成・編集できます。
           </p>
         </div>
         <form onsubmit="addCategoryItem(event)" class="flex items-center gap-2">
-          <input type="text" id="new-category-input" placeholder="例：語学・読書、家事・生活..." class="flex-1 bg-[#0c100e] border border-[#d4af37]/35 rounded-xl px-3.5 py-2 text-sm text-[#ede8dc] focus:outline-none focus:border-[#d4af37]" />
+          <input type="text" id="new-category-input" placeholder="新しいカテゴリ名を入力（例：語学・読書、家事・生活）" class="flex-1 bg-[#0c100e] border border-[#d4af37]/35 rounded-xl px-3.5 py-2 text-sm text-[#ede8dc] focus:outline-none focus:border-[#d4af37]" />
           <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-serif font-bold text-xs sm:text-sm transition active:scale-95 whitespace-nowrap">
-            <i class="fa-solid fa-plus mr-1"></i>追加
+            <i class="fa-solid fa-plus mr-1"></i>作成
           </button>
         </form>
-        <div id="categories-settings-list" class="flex flex-wrap gap-2"></div>
+        <div id="categories-settings-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
       </div>
 
       <!-- キャラクター画像・レベル帯・称号カスタム設定カード -->
@@ -539,7 +588,10 @@
           <input type="text" id="job-name-input" placeholder="例：森の賢者（プログラミング）" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#ede8dc] focus:outline-none focus:border-[#d4af37]" />
         </div>
         <div>
-          <label class="block text-xs font-bold text-[#d6d0c2] mb-1.5">カテゴリ</label>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="text-xs font-bold text-[#d6d0c2]">カテゴリ</label>
+            <button type="button" onclick="quickCreateCategoryPrompt('job-category-select')" class="text-xs font-bold text-[#d4af37] hover:underline">＋ 新規作成</button>
+          </div>
           <select id="job-category-select" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]"></select>
         </div>
         <div>
@@ -705,15 +757,14 @@
     };
 
     // ★ここをご自身の本番用Firebaseプロジェクトの値に差し替えてください
-const firebaseConfig = {
-  apiKey: "AIzaSyA_kyZaWhcXN4DXIGJ7xdsVXy5U_GQwdMQ",
-  authDomain: "mytaskrpg-fc165.firebaseapp.com",
-  projectId: "mytaskrpg-fc165",
-  storageBucket: "mytaskrpg-fc165.firebasestorage.app",
-  messagingSenderId: "344080391583",
-  appId: "1:344080391583:web:ea0ef18c7f2d20c5eb31aa",
-  measurementId: "G-0FPXZ59YD4"
-};
+    const firebaseConfig = {
+      apiKey: "AIzaSyDummyKeyForTaskRPGProduction12345",
+      authDomain: "task-rpg-production.firebaseapp.com",
+      projectId: "task-rpg-production",
+      storageBucket: "task-rpg-production.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
+    };
 
     function normalizeCategories(rawCats) {
       const list = Array.isArray(rawCats) && rawCats.length > 0 ? rawCats : DEFAULT_CATEGORIES;
@@ -746,21 +797,28 @@ const firebaseConfig = {
       }));
     }
 
-    function syncCategorySelects() {
+    function syncCategorySelects(preferredSelectId = null, preferredValue = null) {
       const cats = normalizeCategories(window.state.categories);
       window.state.categories = cats;
 
       const jobFilter = document.getElementById('job-category-filter');
       if (jobFilter) {
-        const prev = jobFilter.value || 'all';
+        const prev = (preferredSelectId === 'job-category-filter' && preferredValue) ? preferredValue : (jobFilter.value || 'all');
         jobFilter.innerHTML = `<option value="all">すべてのカテゴリ</option>` +
           cats.map(c => `<option value="${c}">${c}</option>`).join('');
         jobFilter.value = Array.from(jobFilter.options).some(o => o.value === prev) ? prev : 'all';
       }
 
+      const jobSelect = document.getElementById('job-category-select');
+      if (jobSelect) {
+        const prev = (preferredSelectId === 'job-category-select' && preferredValue) ? preferredValue : jobSelect.value;
+        jobSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+        if (prev && cats.includes(prev)) jobSelect.value = prev;
+      }
+
       const dailySelect = document.getElementById('daily-category-select');
       if (dailySelect) {
-        const prev = dailySelect.value;
+        const prev = (preferredSelectId === 'daily-category-select' && preferredValue) ? preferredValue : dailySelect.value;
         dailySelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
         if (prev && cats.includes(prev)) dailySelect.value = prev;
         else if (cats.includes('生活・日課')) dailySelect.value = '生活・日課';
@@ -768,7 +826,7 @@ const firebaseConfig = {
 
       const dailyFilter = document.getElementById('daily-category-filter');
       if (dailyFilter) {
-        const prev = dailyFilter.value || 'all';
+        const prev = (preferredSelectId === 'daily-category-filter' && preferredValue) ? preferredValue : (dailyFilter.value || 'all');
         dailyFilter.innerHTML = `<option value="all">すべてのカテゴリ</option>` +
           cats.map(c => `<option value="${c}">${c}</option>`).join('');
         dailyFilter.value = Array.from(dailyFilter.options).some(o => o.value === prev) ? prev : 'all';
@@ -787,6 +845,28 @@ const firebaseConfig = {
       }
     }
 
+    function createCategoryInternal(rawName) {
+      const name = String(rawName || '').trim();
+      if (!name) return { ok: false, message: "カテゴリ名を入力してください", type: "error" };
+      const cats = normalizeCategories(window.state.categories);
+      if (cats.includes(name)) return { ok: false, message: `「${name}」はすでに存在します`, type: "info" };
+      cats.push(name);
+      window.state.categories = cats;
+      saveToFirestore();
+      renderAll();
+      return { ok: true, name, message: `カテゴリ「${name}」を作成しました！`, type: "success" };
+    }
+
+    window.quickCreateCategoryPrompt = function(targetSelectId = null) {
+      const input = window.prompt("新しいカテゴリ名を入力してください");
+      if (input === null) return;
+      const res = createCategoryInternal(input);
+      if (res.ok && targetSelectId) {
+        syncCategorySelects(targetSelectId, res.name);
+      }
+      showToast(res.message, res.type);
+    };
+
     function renderCategoriesSettings() {
       const listEl = document.getElementById('categories-settings-list');
       if (!listEl) return;
@@ -794,36 +874,55 @@ const firebaseConfig = {
       const canDelete = cats.length > 1;
 
       listEl.innerHTML = cats.map((cat, idx) => `
-        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0c100e] border border-[#d4af37]/35 text-xs font-serif font-bold text-[#f3e5ab]">
-          <span><i class="fa-solid fa-tag text-[#d4af37] mr-1"></i>${cat}</span>
+        <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2 min-w-0 flex-1">
+            <i class="fa-solid fa-tag text-[#d4af37] text-xs flex-shrink-0"></i>
+            <input type="text" value="${cat}" onchange="renameCategoryItem(${idx}, this.value)" aria-label="カテゴリ名" class="w-full bg-[#141a17] border border-[#d4af37]/25 focus:border-[#d4af37] rounded-lg px-2.5 py-1 text-xs sm:text-sm font-serif font-bold text-[#f3e5ab] focus:outline-none" />
+          </div>
           ${canDelete ? `
-            <button type="button" onclick="deleteCategoryItem(${idx})" class="text-[#a8a293] hover:text-rose-400 transition" title="カテゴリ削除">
-              <i class="fa-solid fa-xmark"></i>
+            <button type="button" onclick="deleteCategoryItem(${idx})" class="w-7 h-7 rounded-lg bg-[#141a17] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition flex-shrink-0" title="カテゴリ削除">
+              <i class="fa-solid fa-trash"></i>
             </button>
           ` : ''}
-        </span>
+        </div>
       `).join('');
     }
 
     window.addCategoryItem = function(e) {
       e.preventDefault();
       const input = document.getElementById('new-category-input');
-      const name = (input?.value || '').trim();
-      if (!name) {
-        showToast("カテゴリ名を入力してください", "error");
-        return;
-      }
+      const res = createCategoryInternal(input?.value || '');
+      if (res.ok && input) input.value = '';
+      showToast(res.message, res.type);
+    };
+
+    window.renameCategoryItem = function(idx, nextRawName) {
       const cats = normalizeCategories(window.state.categories);
-      if (cats.includes(name)) {
-        showToast("すでに存在するカテゴリです", "info");
+      const oldName = cats[idx];
+      if (!oldName) return;
+      const nextName = String(nextRawName || '').trim();
+
+      if (!nextName) {
+        showToast("カテゴリ名は空にできません", "error");
+        renderCategoriesSettings();
         return;
       }
-      cats.push(name);
+      if (nextName === oldName) return;
+      if (cats.includes(nextName)) {
+        showToast(`「${nextName}」はすでに存在します`, "error");
+        renderCategoriesSettings();
+        return;
+      }
+
+      cats[idx] = nextName;
       window.state.categories = cats;
-      input.value = '';
+      window.state.jobs.forEach(j => { if (j.category === oldName) j.category = nextName; });
+      window.state.dailies.forEach(d => { if (d.category === oldName) d.category = nextName; });
+      window.state.logs.forEach(l => { if (l.category === oldName) l.category = nextName; });
+
       saveToFirestore();
       renderAll();
-      showToast(`カテゴリ「${name}」を追加しました！`, "success");
+      showToast(`カテゴリを「${nextName}」に変更しました！`, "success");
     };
 
     window.deleteCategoryItem = function(idx) {
@@ -1674,6 +1773,7 @@ const firebaseConfig = {
     function syncCalendarYearMonthControls() {
       const yearSelect = document.getElementById('calendar-year-select');
       const monthSelect = document.getElementById('calendar-month-select');
+      const monthPicker = document.getElementById('calendar-month-picker');
       if (!yearSelect || !monthSelect) return;
 
       const currentYear = new Date().getFullYear();
@@ -1689,6 +1789,10 @@ const firebaseConfig = {
       yearSelect.innerHTML = sortedYears.map(y => `<option value="${y}">${y}年</option>`).join('');
       yearSelect.value = String(window.state.calendarYear);
       monthSelect.value = String(window.state.calendarMonth);
+
+      if (monthPicker) {
+        monthPicker.value = `${window.state.calendarYear}-${String(window.state.calendarMonth + 1).padStart(2, '0')}`;
+      }
     }
 
     window.onCalendarYearMonthChange = function() {
@@ -1696,6 +1800,14 @@ const firebaseConfig = {
       const monthSelect = document.getElementById('calendar-month-select');
       if (yearSelect) window.state.calendarYear = parseInt(yearSelect.value, 10);
       if (monthSelect) window.state.calendarMonth = parseInt(monthSelect.value, 10);
+      renderCalendar();
+    };
+
+    window.onCalendarMonthPickerChange = function(ymValue) {
+      if (!ymValue || !/^\d{4}-\d{2}$/.test(ymValue)) return;
+      const [yStr, mStr] = ymValue.split('-');
+      window.state.calendarYear = parseInt(yStr, 10);
+      window.state.calendarMonth = Math.min(11, Math.max(0, parseInt(mStr, 10) - 1));
       renderCalendar();
     };
 
@@ -1813,6 +1925,16 @@ const firebaseConfig = {
 
       monthFilter.value = Array.from(monthFilter.options).some(o => o.value === prev) ? prev : 'all';
     }
+
+    window.resetLogFilters = function() {
+      const mEl = document.getElementById('log-filter-month');
+      const cEl = document.getElementById('log-filter-category');
+      const jEl = document.getElementById('log-filter-job');
+      if (mEl) mEl.value = 'all';
+      if (cEl) cEl.value = 'all';
+      if (jEl) jEl.value = 'all';
+      renderLogs();
+    };
 
     function renderLogs() {
       const container = document.getElementById('logs-list');
