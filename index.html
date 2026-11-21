@@ -138,11 +138,6 @@
     .tri-bl { position: absolute; bottom: 0; left: 0; }
     .tri-br { position: absolute; bottom: 0; right: 0; }
 
-    input[type="month"]::-webkit-calendar-picker-indicator {
-      filter: invert(0.8) sepia(0.5) saturate(3) hue-rotate(5deg);
-      cursor: pointer;
-    }
-
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0c100e; }
     ::-webkit-scrollbar-thumb { background: #3a3322; border-radius: 9999px; }
@@ -176,7 +171,7 @@
             </span>
           </div>
           <div class="flex items-center gap-3 text-xs text-[#a8a293] mt-0.5">
-            <span>総レベル: <strong id="total-level-display" class="text-[#d4af37] font-rpg text-sm">Lv.0</strong></span>
+            <span>総レベル: <strong id="total-level-display" class="text-[#d4af37] font-rpg text-sm">Lv.1</strong></span>
             <span>•</span>
             <span>達成記録: <strong id="total-cleared-display" class="text-emerald-400">0</strong></span>
           </div>
@@ -221,32 +216,17 @@
     <!-- タブ1: 職業クエスト -->
     <!-- ========================================== -->
     <section id="tab-quests" class="space-y-6">
-      <div class="oot-panel rounded-2xl p-4 sm:p-5 space-y-3.5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
-              <i class="fa-solid fa-shield-halved text-[#d4af37]"></i>
-              <span>ジョブステータス ＆ 受注した試練</span>
-            </h2>
-            <p class="text-xs text-[#a8a293] mt-0.5">カテゴリごとに職業を整理し、試練を1回達成するごとにレベルが1上がります。</p>
-          </div>
-          <button onclick="openJobModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#e5c158] via-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 flex items-center justify-center gap-2 flex-shrink-0">
-            <i class="fa-solid fa-plus"></i><span>新たな職業を授かる</span>
-          </button>
+      <div class="oot-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-[#d4af37]"></i>
+            <span>ジョブステータス ＆ 受注した試練</span>
+          </h2>
+          <p class="text-xs text-[#a8a293] mt-0.5">職業ごとに試練を授かり、1回達成するごとにその職業のレベルが1上がります。</p>
         </div>
-
-        <!-- 職業フィルターバー -->
-        <div class="bg-[#0c100e]/85 border border-[#d4af37]/20 rounded-xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-serif font-bold text-[#a8a293] flex items-center gap-1.5">
-              <i class="fa-solid fa-filter text-[#d4af37] text-[11px]"></i>カテゴリ絞り込み
-            </span>
-            <select id="job-category-filter" onchange="renderJobs()" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#d4af37]">
-              <option value="all">すべてのカテゴリ</option>
-            </select>
-          </div>
-          <button type="button" onclick="quickCreateCategoryPrompt()" class="text-xs font-serif font-bold text-[#d4af37] hover:text-[#f3e5ab] transition flex items-center gap-1">
-            <i class="fa-solid fa-tag text-[11px]"></i>＋ 新規カテゴリ作成
+        <div class="flex items-center gap-2">
+          <button onclick="openJobModal()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#e5c158] via-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-plus"></i><span>新たな職業を授かる</span>
           </button>
         </div>
       </div>
@@ -270,8 +250,8 @@
         </div>
       </div>
 
-      <!-- 職業カテゴリ別グループ表示エリア -->
-      <div id="jobs-grid" class="space-y-6"></div>
+      <!-- 職業カードグリッド -->
+      <div id="jobs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
     </section>
 
     <!-- ========================================== -->
@@ -287,11 +267,11 @@
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-0.5">毎日の日課を刻もう！累計3回達成するごとに共通レベルが上がります（0時に自動リセット）。</p>
           </div>
-          <div class="bg-[#0c100e]/90 border border-[#d4af37]/40 rounded-xl px-4 py-2.5 flex items-center gap-3 flex-shrink-0">
+          <div class="bg-[#0c100e]/90 border border-[#d4af37]/40 rounded-xl px-4 py-2.5 flex items-center gap-3">
             <div class="text-2xl text-emerald-400"><i class="fa-solid fa-gem"></i></div>
             <div>
               <div class="text-[10px] font-bold text-[#a8a293] uppercase tracking-wider">修行共通Lv</div>
-              <div class="font-rpg font-extrabold text-lg text-[#f3e5ab]" id="daily-level-display">Lv.0</div>
+              <div class="font-rpg font-extrabold text-lg text-[#f3e5ab]" id="daily-level-display">Lv.1</div>
             </div>
             <div class="border-l border-[#d4af37]/25 pl-3 ml-1">
               <div class="text-[10px] font-bold text-[#a8a293]">次の昇格まで</div>
@@ -301,46 +281,21 @@
         </div>
 
         <form onsubmit="addDailyTask(event)" class="space-y-3 pt-1">
-          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
-            <div class="sm:col-span-5">
-              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">修行の内容</label>
-              <input type="text" id="daily-title-input" placeholder="例：剣の素振り、聖水（水）を1L飲む..." class="w-full min-w-0 bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2 text-sm text-[#ede8dc] placeholder-[#6e6a5f] focus:outline-none focus:border-[#d4af37]" />
-            </div>
-            <div class="sm:col-span-3">
-              <div class="flex items-center justify-between mb-1">
-                <label class="text-[10px] font-bold text-[#a8a293]">カテゴリ</label>
-                <button type="button" onclick="quickCreateCategoryPrompt('daily-category-select')" class="text-[10px] font-bold text-[#d4af37] hover:underline">＋新規</button>
-              </div>
-              <select id="daily-category-select" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-2.5 py-2 text-xs sm:text-sm text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]"></select>
-            </div>
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
+            <input type="text" id="daily-title-input" placeholder="例：剣の素振り、聖水（水）を1L飲む..." class="w-full min-w-0 sm:col-span-8 bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#ede8dc] placeholder-[#6e6a5f] focus:outline-none focus:border-[#d4af37]" />
             <div class="sm:col-span-4 flex items-center gap-2">
-              <div class="w-20 flex-shrink-0">
-                <label class="block text-[10px] font-bold text-[#a8a293] mb-1">1日上限</label>
-                <input type="number" id="daily-max-input" value="1" min="1" max="99" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-2 py-2 text-sm text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
+              <div class="flex-1 min-w-0">
+                <label class="block text-[10px] font-bold text-[#a8a293] mb-1">1日の上限回数</label>
+                <input type="number" id="daily-max-input" value="1" min="1" max="99" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3 py-2 text-sm text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
               </div>
-              <button type="submit" class="flex-1 px-4 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs sm:text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 whitespace-nowrap h-[38px]">
+              <button type="submit" class="mt-4 px-4 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs sm:text-sm shadow-lg shadow-[#d4af37]/20 transition active:scale-95 whitespace-nowrap h-[38px] flex-shrink-0">
                 <i class="fa-solid fa-plus mr-1"></i>追加
               </button>
             </div>
           </div>
         </form>
 
-        <!-- 修行グループフィルターバー -->
-        <div class="bg-[#0c100e]/85 border border-[#d4af37]/20 rounded-xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
-          <div class="flex items-center gap-2 flex-wrap">
-            <span class="text-xs font-serif font-bold text-[#a8a293] flex items-center gap-1.5">
-              <i class="fa-solid fa-filter text-emerald-400 text-[11px]"></i>グループ絞り込み
-            </span>
-            <select id="daily-category-filter" onchange="renderDailies()" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-3 py-1.5 focus:outline-none focus:border-[#d4af37]">
-              <option value="all">すべてのカテゴリ</option>
-            </select>
-          </div>
-          <button type="button" onclick="quickCreateCategoryPrompt('daily-category-filter')" class="text-xs font-serif font-bold text-[#d4af37] hover:text-[#f3e5ab] transition flex items-center gap-1">
-            <i class="fa-solid fa-tag text-[11px]"></i>＋ 新規カテゴリ作成
-          </button>
-        </div>
-
-        <div id="dailies-list" class="space-y-5 pt-1"></div>
+        <div id="dailies-list" class="space-y-3 pt-2"></div>
       </div>
     </section>
 
@@ -349,42 +304,20 @@
     <!-- ========================================== -->
     <section id="tab-logs" class="hidden space-y-6 max-w-4xl mx-auto">
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3 border-b border-[#d4af37]/20 pb-3.5">
+        <div class="flex items-center justify-between">
           <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
             <i class="fa-solid fa-hourglass-half text-[#d4af37]"></i>
             <span id="calendar-month-title">時の暦（達成カレンダー）</span>
           </h2>
-
-          <!-- 年月選択ツールバー -->
-          <div class="bg-[#0c100e]/90 border border-[#d4af37]/30 rounded-xl p-1.5 flex items-center gap-1.5 flex-wrap">
-            <button type="button" onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-lg bg-[#141a17] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition" title="前月">
+          <div class="flex items-center gap-1.5">
+            <button onclick="changeCalendarMonth(-1)" class="w-8 h-8 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition">
               <i class="fa-solid fa-chevron-left"></i>
             </button>
-            <select id="calendar-year-select" onchange="onCalendarYearMonthChange()" aria-label="年を選択" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#d4af37]"></select>
-            <select id="calendar-month-select" onchange="onCalendarYearMonthChange()" aria-label="月を選択" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs font-bold rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-[#d4af37]">
-              <option value="0">1月</option>
-              <option value="1">2月</option>
-              <option value="2">3月</option>
-              <option value="3">4月</option>
-              <option value="4">5月</option>
-              <option value="5">6月</option>
-              <option value="6">7月</option>
-              <option value="7">8月</option>
-              <option value="8">9月</option>
-              <option value="9">10月</option>
-              <option value="10">11月</option>
-              <option value="11">12月</option>
-            </select>
-            <input type="month" id="calendar-month-picker" onchange="onCalendarMonthPickerChange(this.value)" aria-label="年月ピッカー" class="bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2 py-1 focus:outline-none focus:border-[#d4af37]" />
-            <button type="button" onclick="jumpCalendarToToday()" class="px-2.5 py-1.5 rounded-lg bg-[#d4af37]/20 hover:bg-[#d4af37]/30 border border-[#d4af37]/45 text-[#f3e5ab] text-xs font-serif font-bold transition whitespace-nowrap">
-              今月
-            </button>
-            <button type="button" onclick="changeCalendarMonth(1)" class="w-8 h-8 rounded-lg bg-[#141a17] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition" title="翌月">
+            <button onclick="changeCalendarMonth(1)" class="w-8 h-8 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 hover:border-[#d4af37] text-[#d6d0c2] flex items-center justify-center text-xs transition">
               <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
         </div>
-
         <div class="grid grid-cols-7 gap-1 text-center text-[11px] font-serif font-bold text-[#a8a293] pb-1 border-b border-[#d4af37]/25">
           <span class="text-rose-400">日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span class="text-sky-400">土</span>
         </div>
@@ -392,40 +325,19 @@
       </div>
 
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="space-y-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-base sm:text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-scroll text-emerald-400"></i>
               <span>冒険の古文書（全達成記録）</span>
             </h2>
-            <p class="text-xs text-[#a8a293] mt-0.5">年月やカテゴリを指定して、これまでに刻んだ試練達成の軌跡を振り返れます。</p>
+            <p class="text-xs text-[#a8a293] mt-0.5">これまでに刻んだ試練達成の軌跡です。</p>
           </div>
-
-          <!-- 達成履歴フィルターバー -->
-          <div class="bg-[#0c100e]/85 border border-[#d4af37]/25 rounded-xl p-3 grid grid-cols-1 sm:grid-cols-4 gap-2.5 items-end">
-            <div>
-              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">達成年月</label>
-              <select id="log-filter-month" onchange="renderLogs()" class="w-full bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#d4af37]">
-                <option value="all">すべての年月</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">カテゴリ</label>
-              <select id="log-filter-category" onchange="renderLogs()" class="w-full bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#d4af37]">
-                <option value="all">すべてのカテゴリ</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-[10px] font-bold text-[#a8a293] mb-1">記録の種別</label>
-              <select id="log-filter-job" onchange="renderLogs()" class="w-full bg-[#141a17] border border-[#d4af37]/35 text-[#f3e5ab] text-xs rounded-lg px-2.5 py-2 focus:outline-none focus:border-[#d4af37]">
-                <option value="all">すべての種別</option>
-                <option value="job">職業試練のみ</option>
-                <option value="daily">日々の修行のみ</option>
-              </select>
-            </div>
-            <button type="button" onclick="resetLogFilters()" class="w-full py-2 px-3 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/35 text-[#d6d0c2] hover:text-[#f3e5ab] text-xs font-bold transition flex items-center justify-center gap-1.5">
-              <i class="fa-solid fa-rotate-left text-[11px]"></i><span>条件リセット</span>
-            </button>
+          <div>
+            <select id="log-filter-job" onchange="renderLogs()" class="bg-[#0c100e] border border-[#d4af37]/35 text-[#ede8dc] text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:border-[#d4af37]">
+              <option value="all">すべての記録</option>
+              <option value="daily">日々の修行のみ</option>
+            </select>
           </div>
         </div>
         <div id="logs-list" class="space-y-3"></div>
@@ -437,84 +349,23 @@
     <!-- ========================================== -->
     <section id="tab-settings" class="hidden space-y-6 max-w-3xl mx-auto">
 
-      <!-- カテゴリ管理カード -->
-      <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="border-b border-[#d4af37]/25 pb-3">
-          <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
-            <i class="fa-solid fa-tags text-[#d4af37]"></i>
-            <span>カテゴリ管理（作成・名前編集・削除）</span>
-          </h2>
-          <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-            職業・日々の修行・達成履歴のグループ分けに使うカテゴリを自由に作成・編集できます。
-          </p>
-        </div>
-        <form onsubmit="addCategoryItem(event)" class="flex items-center gap-2">
-          <input type="text" id="new-category-input" placeholder="新しいカテゴリ名を入力（例：語学・読書、家事・生活）" class="flex-1 bg-[#0c100e] border border-[#d4af37]/35 rounded-xl px-3.5 py-2 text-sm text-[#ede8dc] focus:outline-none focus:border-[#d4af37]" />
-          <button type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-serif font-bold text-xs sm:text-sm transition active:scale-95 whitespace-nowrap">
-            <i class="fa-solid fa-plus mr-1"></i>作成
-          </button>
-        </form>
-        <div id="categories-settings-list" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5"></div>
-      </div>
-
       <!-- キャラクター画像・レベル帯・称号カスタム設定カード -->
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-[#d4af37]/25 pb-3">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#d4af37]/25 pb-3">
           <div>
             <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-user-astronaut text-[#d4af37]"></i>
               <span>冒険者の姿・レベル別アイコン設定</span>
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-              段階の追加・削除や、「必要総レベル」「称号名」「透過アイコン画像」を自由に設定できます。
+              各段階の「必要総レベル」「称号名」「アイコン画像」を自由にカスタマイズできます。
             </p>
           </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <button onclick="addAvatarStage()" class="px-3 py-1.5 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-xs shadow transition active:scale-95 whitespace-nowrap">
-              <i class="fa-solid fa-plus mr-1"></i>段階を追加
-            </button>
-            <button onclick="resetAvatarStages()" class="px-3 py-1.5 rounded-lg bg-[#0c100e] hover:bg-[#1b241f] border border-[#d4af37]/30 text-[11px] text-[#a8a293] hover:text-[#f3e5ab] transition whitespace-nowrap">
-              <i class="fa-solid fa-rotate-left mr-1"></i>初期設定に戻す
-            </button>
-          </div>
+          <button onclick="resetAvatarStages()" class="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#0c100e] hover:bg-[#1b241f] border border-[#d4af37]/30 text-[11px] text-[#a8a293] hover:text-[#f3e5ab] transition whitespace-nowrap">
+            <i class="fa-solid fa-rotate-left mr-1"></i>初期設定に戻す
+          </button>
         </div>
         <div id="avatar-stages-settings" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
-      </div>
-
-      <!-- 各効果音カスタム設定 ＆ 音声ファイル管理カード -->
-      <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
-        <div class="flex items-center justify-between gap-2 border-b border-[#d4af37]/25 pb-3">
-          <div>
-            <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
-              <i class="fa-solid fa-music text-[#d4af37]"></i>
-              <span>効果音（SE）個別設定・MP3追加</span>
-            </h2>
-            <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-              MP3などの音声ファイルを追加し、シーンごとに ON/OFF と音源を設定できます（目安: 1ファイル約700KB以下）。
-            </p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer flex-shrink-0" title="全体のサウンド有効/無効">
-            <input type="checkbox" id="sound-toggle" checked class="sr-only peer" onchange="toggleMasterSound(this.checked)">
-            <div class="w-11 h-6 bg-[#0c100e] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-[#f3e5ab] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#d4af37]"></div>
-          </label>
-        </div>
-
-        <!-- 音声ファイル追加・一覧エリア -->
-        <div class="bg-[#0c100e]/85 border border-[#d4af37]/25 rounded-xl p-3.5 space-y-2.5">
-          <div class="flex items-center justify-between gap-2">
-            <span class="text-xs font-serif font-bold text-[#f3e5ab]">
-              <i class="fa-solid fa-file-audio text-[#d4af37] mr-1.5"></i>追加した音声ファイル
-            </span>
-            <label class="px-3 py-1.5 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] font-serif font-bold text-xs cursor-pointer transition whitespace-nowrap">
-              <i class="fa-solid fa-plus mr-1"></i>MP3等を追加
-              <input type="file" accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg,audio/webm,audio/*" class="hidden" onchange="uploadCustomSoundFile(event)">
-            </label>
-          </div>
-          <div id="custom-audio-list" class="space-y-1.5"></div>
-        </div>
-
-        <!-- 各シーンの効果音設定 -->
-        <div id="sound-effects-settings" class="space-y-3"></div>
       </div>
 
       <!-- 時空の同期カード -->
@@ -552,6 +403,19 @@
         </div>
       </div>
 
+      <!-- サウンド設定 -->
+      <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-sm font-serif font-bold text-[#f3e5ab]">オカリナ ＆ 宝箱の音色</h3>
+            <p class="text-xs text-[#a8a293]">試練達成時に神秘的なファンファーレを奏でます</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="sound-toggle" checked class="sr-only peer" onchange="state.soundEnabled = this.checked">
+            <div class="w-11 h-6 bg-[#0c100e] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-[#f3e5ab] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#d4af37]"></div>
+          </label>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -586,13 +450,6 @@
         <div>
           <label class="block text-xs font-bold text-[#d6d0c2] mb-1.5">職業名 <span class="text-rose-400">*</span></label>
           <input type="text" id="job-name-input" placeholder="例：森の賢者（プログラミング）" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#ede8dc] focus:outline-none focus:border-[#d4af37]" />
-        </div>
-        <div>
-          <div class="flex items-center justify-between mb-1.5">
-            <label class="text-xs font-bold text-[#d6d0c2]">カテゴリ</label>
-            <button type="button" onclick="quickCreateCategoryPrompt('job-category-select')" class="text-xs font-bold text-[#d4af37] hover:underline">＋ 新規作成</button>
-          </div>
-          <select id="job-category-select" class="w-full bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3.5 py-2.5 text-sm text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]"></select>
         </div>
         <div>
           <label class="block text-xs font-bold text-[#d6d0c2] mb-1.5">精霊石カラー</label>
@@ -687,8 +544,6 @@
     import { getAuth, signInAnonymously, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
     import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    const DEFAULT_CATEGORIES = ['技術・学習', '心身・運動', '創作・趣味', '生活・日課', 'その他'];
-
     const JOB_COLORS = [
       { id: 'amber',   name: '聖三角ゴールド', hex: '#d4af37', bg: 'bg-[#d4af37]/15',   text: 'text-[#f3e5ab]',   border: 'border-[#d4af37]/45',   btn: 'bg-[#d4af37]' },
       { id: 'emerald', name: 'コキリ翠玉',     hex: '#10b981', bg: 'bg-emerald-500/15', text: 'text-emerald-300', border: 'border-emerald-500/45', btn: 'bg-emerald-500' },
@@ -706,49 +561,27 @@
     ];
 
     const DEFAULT_PRESET_JOBS = [
-      { name: 'プログラミング魔道士', category: '技術・学習', color: 'sky', icon: 'fa-code', level: 0, currentExp: 0, nextExp: 1, missions: ['技術書を1章読み進める', 'C# / JSのコードを記述・修正する'] },
-      { name: '肉体強化の戦士', category: '心身・運動', color: 'rose', icon: 'fa-dumbbell', level: 0, currentExp: 0, nextExp: 1, missions: ['筋トレ・体幹トレーニングを行う', '1駅分歩く / 有酸素運動を行う'] },
-      { name: '音楽・芸術の吟遊詩人', category: '創作・趣味', color: 'amber', icon: 'fa-music', level: 0, currentExp: 0, nextExp: 1, missions: ['楽器（ピアノ・アコギ）の練習をする', 'Cubase等で音源制作を行う'] }
+      { name: 'プログラミング魔道士', color: 'sky', icon: 'fa-code', level: 1, currentExp: 0, nextExp: 1, missions: ['技術書を1章読み進める', 'C# / JSのコードを記述・修正する'] },
+      { name: '肉体強化の戦士', color: 'rose', icon: 'fa-dumbbell', level: 1, currentExp: 0, nextExp: 1, missions: ['筋トレ・体幹トレーニングを行う', '1駅分歩く / 有酸素運動を行う'] },
+      { name: '音楽・芸術の吟遊詩人', color: 'amber', icon: 'fa-music', level: 1, currentExp: 0, nextExp: 1, missions: ['楽器（ピアノ・アコギ）の練習をする', 'Cubase等で音源制作を行う'] }
     ];
 
     const DEFAULT_AVATAR_STAGES = [
-      { id: 'stage_0', minLv: 0,  name: "コキリの少年", desc: "冒険の始まりの姿" },
-      { id: 'stage_1', minLv: 5,  name: "見習い冒険者", desc: "少しずつ経験を積んだ姿" },
-      { id: 'stage_2', minLv: 10, name: "勇者の戦士",   desc: "数々の試練を乗り越えた姿" },
-      { id: 'stage_3', minLv: 20, name: "聖騎士",       desc: "神聖な光をまとう姿" },
-      { id: 'stage_4', minLv: 35, name: "伝説の勇者",   desc: "神話に語り継がれる姿" },
-      { id: 'stage_5', minLv: 50, name: "時の神",       desc: "時空を統べる最高峰の姿" }
+      { minLv: 1,  name: "コキリの少年", desc: "冒険の始まりの姿" },
+      { minLv: 5,  name: "見習い冒険者", desc: "少しずつ経験を積んだ姿" },
+      { minLv: 10, name: "勇者の戦士",   desc: "数々の試練を乗り越えた姿" },
+      { minLv: 20, name: "聖騎士",       desc: "神聖な光をまとう姿" },
+      { minLv: 35, name: "伝説の勇者",   desc: "神話に語り継がれる姿" },
+      { minLv: 50, name: "時の神",       desc: "時空を統べる最高峰の姿" }
     ];
-
-    const SOUND_EVENTS = [
-      { key: 'missionClear', label: '試練達成音', desc: '職業クエストの試練を達成したとき' },
-      { key: 'levelUp',      label: 'レベルアップ音', desc: '職業レベルが上がったとき' },
-      { key: 'dailyClear',   label: '日々の修行音', desc: 'デイリー試練を達成したとき' }
-    ];
-
-    const SOUND_PRESETS = [
-      { id: 'fanfare', name: 'ファンファーレ（上昇和音）' },
-      { id: 'ocarina', name: 'オカリナ風（澄んだ余韻）' },
-      { id: 'crystal', name: 'クリスタル（きらめき）' },
-      { id: 'bell',    name: '聖堂のベル（重厚な響き）' }
-    ];
-
-    const DEFAULT_SOUND_SETTINGS = {
-      missionClear: { enabled: true, preset: 'fanfare' },
-      levelUp:      { enabled: true, preset: 'bell' },
-      dailyClear:   { enabled: true, preset: 'ocarina' }
-    };
 
     window.state = {
-      categories: [...DEFAULT_CATEGORIES],
       jobs: [],
       dailies: [],
       logs: [],
       avatarStages: JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES)),
       avatarCustoms: {},
       soundEnabled: true,
-      soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS)),
-      customSounds: [],
       currentTab: 'quests',
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth(),
@@ -757,324 +590,37 @@
     };
 
     // ★ここをご自身の本番用Firebaseプロジェクトの値に差し替えてください
-const firebaseConfig = {
-  apiKey: "AIzaSyA_kyZaWhcXN4DXIGJ7xdsVXy5U_GQwdMQ",
-  authDomain: "mytaskrpg-fc165.firebaseapp.com",
-  projectId: "mytaskrpg-fc165",
-  storageBucket: "mytaskrpg-fc165.firebasestorage.app",
-  messagingSenderId: "344080391583",
-  appId: "1:344080391583:web:ea0ef18c7f2d20c5eb31aa",
-  measurementId: "G-0FPXZ59YD4"
-};
-
-    function normalizeCategories(rawCats) {
-      const list = Array.isArray(rawCats) && rawCats.length > 0 ? rawCats : DEFAULT_CATEGORIES;
-      const unique = [];
-      list.forEach(c => {
-        const trimmed = String(c || '').trim();
-        if (trimmed && !unique.includes(trimmed)) unique.push(trimmed);
-      });
-      return unique.length > 0 ? unique : [...DEFAULT_CATEGORIES];
-    }
-
-    function ensureEntityCategories() {
-      const cats = normalizeCategories(window.state.categories);
-      window.state.categories = cats;
-      const fallbackCat = cats[0] || 'その他';
-
-      window.state.jobs = (window.state.jobs || []).map(j => ({
-        ...j,
-        category: j.category && cats.includes(j.category) ? j.category : (j.category || fallbackCat)
-      }));
-
-      window.state.dailies = (window.state.dailies || []).map(d => ({
-        ...d,
-        category: d.category && cats.includes(d.category) ? d.category : (d.category || '生活・日課')
-      }));
-
-      window.state.logs = (window.state.logs || []).map(l => ({
-        ...l,
-        category: l.category || (l.isDaily ? '生活・日課' : fallbackCat)
-      }));
-    }
-
-    function syncCategorySelects(preferredSelectId = null, preferredValue = null) {
-      const cats = normalizeCategories(window.state.categories);
-      window.state.categories = cats;
-
-      const jobFilter = document.getElementById('job-category-filter');
-      if (jobFilter) {
-        const prev = (preferredSelectId === 'job-category-filter' && preferredValue) ? preferredValue : (jobFilter.value || 'all');
-        jobFilter.innerHTML = `<option value="all">すべてのカテゴリ</option>` +
-          cats.map(c => `<option value="${c}">${c}</option>`).join('');
-        jobFilter.value = Array.from(jobFilter.options).some(o => o.value === prev) ? prev : 'all';
-      }
-
-      const jobSelect = document.getElementById('job-category-select');
-      if (jobSelect) {
-        const prev = (preferredSelectId === 'job-category-select' && preferredValue) ? preferredValue : jobSelect.value;
-        jobSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (prev && cats.includes(prev)) jobSelect.value = prev;
-      }
-
-      const dailySelect = document.getElementById('daily-category-select');
-      if (dailySelect) {
-        const prev = (preferredSelectId === 'daily-category-select' && preferredValue) ? preferredValue : dailySelect.value;
-        dailySelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-        if (prev && cats.includes(prev)) dailySelect.value = prev;
-        else if (cats.includes('生活・日課')) dailySelect.value = '生活・日課';
-      }
-
-      const dailyFilter = document.getElementById('daily-category-filter');
-      if (dailyFilter) {
-        const prev = (preferredSelectId === 'daily-category-filter' && preferredValue) ? preferredValue : (dailyFilter.value || 'all');
-        dailyFilter.innerHTML = `<option value="all">すべてのカテゴリ</option>` +
-          cats.map(c => `<option value="${c}">${c}</option>`).join('');
-        dailyFilter.value = Array.from(dailyFilter.options).some(o => o.value === prev) ? prev : 'all';
-      }
-
-      const logCatFilter = document.getElementById('log-filter-category');
-      if (logCatFilter) {
-        const prev = logCatFilter.value || 'all';
-        const logCats = new Set(cats);
-        (window.state.logs || []).forEach(l => {
-          if (l.category) logCats.add(l.category);
-        });
-        logCatFilter.innerHTML = `<option value="all">すべてのカテゴリ</option>` +
-          Array.from(logCats).map(c => `<option value="${c}">${c}</option>`).join('');
-        logCatFilter.value = Array.from(logCatFilter.options).some(o => o.value === prev) ? prev : 'all';
-      }
-    }
-
-    function createCategoryInternal(rawName) {
-      const name = String(rawName || '').trim();
-      if (!name) return { ok: false, message: "カテゴリ名を入力してください", type: "error" };
-      const cats = normalizeCategories(window.state.categories);
-      if (cats.includes(name)) return { ok: false, message: `「${name}」はすでに存在します`, type: "info" };
-      cats.push(name);
-      window.state.categories = cats;
-      saveToFirestore();
-      renderAll();
-      return { ok: true, name, message: `カテゴリ「${name}」を作成しました！`, type: "success" };
-    }
-
-    window.quickCreateCategoryPrompt = function(targetSelectId = null) {
-      const input = window.prompt("新しいカテゴリ名を入力してください");
-      if (input === null) return;
-      const res = createCategoryInternal(input);
-      if (res.ok && targetSelectId) {
-        syncCategorySelects(targetSelectId, res.name);
-      }
-      showToast(res.message, res.type);
-    };
-
-    function renderCategoriesSettings() {
-      const listEl = document.getElementById('categories-settings-list');
-      if (!listEl) return;
-      const cats = normalizeCategories(window.state.categories);
-      const canDelete = cats.length > 1;
-
-      listEl.innerHTML = cats.map((cat, idx) => `
-        <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl px-3 py-2 flex items-center justify-between gap-2">
-          <div class="flex items-center gap-2 min-w-0 flex-1">
-            <i class="fa-solid fa-tag text-[#d4af37] text-xs flex-shrink-0"></i>
-            <input type="text" value="${cat}" onchange="renameCategoryItem(${idx}, this.value)" aria-label="カテゴリ名" class="w-full bg-[#141a17] border border-[#d4af37]/25 focus:border-[#d4af37] rounded-lg px-2.5 py-1 text-xs sm:text-sm font-serif font-bold text-[#f3e5ab] focus:outline-none" />
-          </div>
-          ${canDelete ? `
-            <button type="button" onclick="deleteCategoryItem(${idx})" class="w-7 h-7 rounded-lg bg-[#141a17] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition flex-shrink-0" title="カテゴリ削除">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          ` : ''}
-        </div>
-      `).join('');
-    }
-
-    window.addCategoryItem = function(e) {
-      e.preventDefault();
-      const input = document.getElementById('new-category-input');
-      const res = createCategoryInternal(input?.value || '');
-      if (res.ok && input) input.value = '';
-      showToast(res.message, res.type);
-    };
-
-    window.renameCategoryItem = function(idx, nextRawName) {
-      const cats = normalizeCategories(window.state.categories);
-      const oldName = cats[idx];
-      if (!oldName) return;
-      const nextName = String(nextRawName || '').trim();
-
-      if (!nextName) {
-        showToast("カテゴリ名は空にできません", "error");
-        renderCategoriesSettings();
-        return;
-      }
-      if (nextName === oldName) return;
-      if (cats.includes(nextName)) {
-        showToast(`「${nextName}」はすでに存在します`, "error");
-        renderCategoriesSettings();
-        return;
-      }
-
-      cats[idx] = nextName;
-      window.state.categories = cats;
-      window.state.jobs.forEach(j => { if (j.category === oldName) j.category = nextName; });
-      window.state.dailies.forEach(d => { if (d.category === oldName) d.category = nextName; });
-      window.state.logs.forEach(l => { if (l.category === oldName) l.category = nextName; });
-
-      saveToFirestore();
-      renderAll();
-      showToast(`カテゴリを「${nextName}」に変更しました！`, "success");
-    };
-
-    window.deleteCategoryItem = function(idx) {
-      const cats = normalizeCategories(window.state.categories);
-      if (cats.length <= 1) {
-        showToast("最低1つのカテゴリは必要です", "error");
-        return;
-      }
-      const target = cats[idx];
-      openConfirmModal("カテゴリの削除", `カテゴリ「${target}」を削除しますか？所属する項目は先頭カテゴリへ移動します。`, () => {
-        cats.splice(idx, 1);
-        const fallback = cats[0];
-        window.state.categories = cats;
-        window.state.jobs.forEach(j => { if (j.category === target) j.category = fallback; });
-        window.state.dailies.forEach(d => { if (d.category === target) d.category = fallback; });
-        window.state.logs.forEach(l => { if (l.category === target) l.category = fallback; });
-        saveToFirestore();
-        renderAll();
-        showToast(`カテゴリ「${target}」を削除しました`, "info");
-      });
+    const firebaseConfig = {
+      apiKey: "AIzaSyDummyKeyForTaskRPGProduction12345",
+      authDomain: "task-rpg-production.firebaseapp.com",
+      projectId: "task-rpg-production",
+      storageBucket: "task-rpg-production.appspot.com",
+      messagingSenderId: "1234567890",
+      appId: "1:1234567890:web:abcdef123456"
     };
 
     let synth = null;
-    let nextSynthStartTime = 0;
-    let activeCustomAudio = null;
-
     function initSynth() {
       if (!synth) {
-        synth = new Tone.PolySynth(Tone.Synth, {
-          maxPolyphony: 8,
+        synth = new Tone.Synth({
           oscillator: { type: "triangle" },
-          envelope: { attack: 0.008, decay: 0.14, sustain: 0.25, release: 0.9 }
+          envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.8 }
         }).toDestination();
       }
     }
 
-    function stopActiveCustomAudio() {
-      if (activeCustomAudio) {
-        try {
-          activeCustomAudio.pause();
-          activeCustomAudio.currentTime = 0;
-        } catch (e) {}
-        activeCustomAudio = null;
-      }
-    }
-
-    function playCustomAudioById(soundId) {
-      const item = (window.state.customSounds || []).find(s => s.id === soundId);
-      if (!item || !item.dataUrl) return false;
-      try {
-        stopActiveCustomAudio();
-        const audio = new Audio(item.dataUrl);
-        activeCustomAudio = audio;
-        audio.addEventListener('ended', () => {
-          if (activeCustomAudio === audio) activeCustomAudio = null;
-        });
-        audio.currentTime = 0;
-        audio.play().catch(() => {});
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }
-
-    window.playSoundByEvent = function(eventKey) {
+    window.playFanfareSound = function() {
       if (!window.state.soundEnabled) return;
-      const cfg = window.state.soundSettings?.[eventKey] || DEFAULT_SOUND_SETTINGS[eventKey];
-      if (!cfg || !cfg.enabled) return;
-
-      const preset = cfg.preset || 'fanfare';
-      if (preset.startsWith('custom_')) {
-        if (playCustomAudioById(preset)) return;
-      }
-
       try {
         initSynth();
         if (Tone.context.state !== 'running') { Tone.start(); }
         const now = Tone.now();
-        const start = Math.max(now, nextSynthStartTime);
-
-        if (preset === 'fanfare') {
-          synth.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.8 } });
-          synth.triggerAttackRelease("C5", "8n", start);
-          synth.triggerAttackRelease("E5", "8n", start + 0.11);
-          synth.triggerAttackRelease("G5", "8n", start + 0.22);
-          synth.triggerAttackRelease("C6", "4n", start + 0.33);
-          nextSynthStartTime = start + 0.75;
-        } else if (preset === 'ocarina') {
-          synth.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.04, decay: 0.15, sustain: 0.4, release: 1.1 } });
-          synth.triggerAttackRelease("G4", "8n", start);
-          synth.triggerAttackRelease("B4", "8n", start + 0.14);
-          synth.triggerAttackRelease("D5", "8n", start + 0.28);
-          synth.triggerAttackRelease("G5", "4n", start + 0.42);
-          nextSynthStartTime = start + 0.9;
-        } else if (preset === 'crystal') {
-          synth.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.002, decay: 0.08, sustain: 0.15, release: 0.6 } });
-          synth.triggerAttackRelease("E5", "16n", start);
-          synth.triggerAttackRelease("A5", "16n", start + 0.08);
-          synth.triggerAttackRelease("C#6", "16n", start + 0.16);
-          synth.triggerAttackRelease("E6", "8n", start + 0.24);
-          nextSynthStartTime = start + 0.65;
-        } else if (preset === 'bell') {
-          synth.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.25, sustain: 0.35, release: 1.4 } });
-          synth.triggerAttackRelease(["C4", "G4"], "4n", start);
-          synth.triggerAttackRelease(["E4", "C5"], "2n", start + 0.28);
-          nextSynthStartTime = start + 1.1;
-        }
+        synth.triggerAttackRelease("C5", "8n", now);
+        synth.triggerAttackRelease("E5", "8n", now + 0.12);
+        synth.triggerAttackRelease("G5", "8n", now + 0.24);
+        synth.triggerAttackRelease("C6", "4n", now + 0.36);
       } catch (e) {}
     };
-
-    window.playFanfareSound = function() {
-      window.playSoundByEvent('missionClear');
-    };
-
-    function normalizeAvatarStages(rawStages) {
-      if (!Array.isArray(rawStages) || rawStages.length === 0) {
-        return JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES));
-      }
-      return rawStages.map((s, idx) => ({
-        id: s.id || `stage_${idx}`,
-        minLv: typeof s.minLv === 'number' ? s.minLv : (parseInt(s.minLv) || 0),
-        name: s.name || `称号 ${idx + 1}`,
-        desc: s.desc || '冒険の段階'
-      }));
-    }
-
-    function normalizeCustomSounds(rawSounds) {
-      if (!Array.isArray(rawSounds)) return [];
-      return rawSounds
-        .filter(s => s && s.id && s.name && s.dataUrl)
-        .map(s => ({ id: s.id, name: s.name, dataUrl: s.dataUrl }));
-    }
-
-    function normalizeSoundSettings(rawSound) {
-      const merged = JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS));
-      const validCustomIds = new Set((window.state.customSounds || []).map(s => s.id));
-      const validPresetIds = new Set([...SOUND_PRESETS.map(p => p.id), ...validCustomIds]);
-
-      if (rawSound && typeof rawSound === 'object') {
-        SOUND_EVENTS.forEach(ev => {
-          if (rawSound[ev.key]) {
-            const candidate = rawSound[ev.key].preset || merged[ev.key].preset;
-            merged[ev.key] = {
-              enabled: typeof rawSound[ev.key].enabled === 'boolean' ? rawSound[ev.key].enabled : true,
-              preset: validPresetIds.has(candidate) ? candidate : merged[ev.key].preset
-            };
-          }
-        });
-      }
-      return merged;
-    }
 
     let app, auth, db;
     try {
@@ -1112,34 +658,25 @@ const firebaseConfig = {
           unsubscribeFirestore = onSnapshot(userDocRef, (docSnap) => {
             if (docSnap.exists()) {
               const data = docSnap.data();
-              window.state.categories = normalizeCategories(data.categories);
               window.state.jobs = data.jobs || [];
               window.state.dailies = data.dailies || [];
               window.state.logs = data.logs || [];
-              ensureEntityCategories();
-              window.state.avatarStages = normalizeAvatarStages(data.avatarStages);
+              window.state.avatarStages = (data.avatarStages && data.avatarStages.length > 0)
+                ? data.avatarStages
+                : JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES));
               window.state.avatarCustoms = data.avatarCustoms || {};
-              if (typeof data.soundEnabled === 'boolean') {
-                window.state.soundEnabled = data.soundEnabled;
-              }
-              window.state.customSounds = normalizeCustomSounds(data.customSounds);
-              window.state.soundSettings = normalizeSoundSettings(data.soundSettings);
               checkDailyReset();
               renderAll();
             } else {
               const initialData = {
-                categories: [...DEFAULT_CATEGORIES],
                 jobs: DEFAULT_PRESET_JOBS,
                 dailies: [
-                  { id: 'd1', title: '毎日の水分補給 (1.5L)', category: '生活・日課', count: 0, maxCount: 1, lastResetDate: getTodayStr() },
-                  { id: 'd2', title: '軽いストレッチ・運動', category: '心身・運動', count: 0, maxCount: 1, lastResetDate: getTodayStr() }
+                  { id: 'd1', title: '毎日の水分補給 (1.5L)', count: 0, maxCount: 1, lastResetDate: getTodayStr() },
+                  { id: 'd2', title: '軽いストレッチ・運動', count: 0, maxCount: 1, lastResetDate: getTodayStr() }
                 ],
                 logs: [],
                 avatarStages: JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES)),
-                avatarCustoms: {},
-                soundEnabled: true,
-                soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS)),
-                customSounds: []
+                avatarCustoms: {}
               };
               setDoc(userDocRef, initialData);
             }
@@ -1160,21 +697,14 @@ const firebaseConfig = {
       const userDocRef = doc(db, "artifacts", "task-rpg-v2", "users", auth.currentUser.uid);
       try {
         await setDoc(userDocRef, {
-          categories: window.state.categories,
           jobs: window.state.jobs,
           dailies: window.state.dailies,
           logs: window.state.logs,
           avatarStages: window.state.avatarStages,
-          avatarCustoms: window.state.avatarCustoms,
-          soundEnabled: window.state.soundEnabled,
-          soundSettings: window.state.soundSettings,
-          customSounds: window.state.customSounds
+          avatarCustoms: window.state.avatarCustoms
         }, { merge: true });
       } catch (e) {
         console.error("Save error:", e);
-        if (String(e?.message || '').includes('exceeds the maximum allowed size')) {
-          showToast("データ容量の上限を超えました。音声ファイルを減らしてください。", "error");
-        }
       }
     };
 
@@ -1220,15 +750,8 @@ const firebaseConfig = {
 
     function calculateTotalLevel() {
       let total = 0;
-      window.state.jobs.forEach(j => total += (typeof j.level === 'number' ? j.level : 0));
+      window.state.jobs.forEach(j => total += (j.level || 1));
       return total;
-    }
-
-    function getStageCustomImage(stage, idx) {
-      return window.state.avatarCustoms[stage.id]
-        || window.state.avatarCustoms[`stage_${idx}`]
-        || window.state.avatarCustoms[stage.minLv]
-        || null;
     }
 
     function getCurrentAvatarInfo() {
@@ -1243,7 +766,7 @@ const firebaseConfig = {
           currentStage = sortedStages[i];
         }
       }
-      const customImg = getStageCustomImage(currentStage, currentStage.idx);
+      const customImg = window.state.avatarCustoms[`stage_${currentStage.idx}`] || window.state.avatarCustoms[currentStage.minLv];
       return { totalLv, currentStage, customImg };
     }
 
@@ -1271,17 +794,15 @@ const firebaseConfig = {
       }
 
       if (tabName === 'logs') { renderCalendar(); renderLogs(); }
-      if (tabName === 'settings') { renderCategoriesSettings(); renderAvatarStagesSettings(); renderSoundSettings(); }
+      if (tabName === 'settings') { renderAvatarStagesSettings(); }
     };
 
     function renderAll() {
-      ensureEntityCategories();
-      syncCategorySelects();
       renderHeaderStats();
       renderJobs();
       renderDailies();
       if (window.state.currentTab === 'logs') { renderCalendar(); renderLogs(); }
-      if (window.state.currentTab === 'settings') { renderCategoriesSettings(); renderAvatarStagesSettings(); renderSoundSettings(); }
+      if (window.state.currentTab === 'settings') { renderAvatarStagesSettings(); }
     }
 
     function renderHeaderStats() {
@@ -1294,79 +815,15 @@ const firebaseConfig = {
 
       const headerIconBox = document.getElementById('header-avatar-icon');
       if (avatarInfo.customImg) {
-        headerIconBox.innerHTML = `<img src="${avatarInfo.customImg}" class="w-full h-full object-contain p-0.5" alt="Avatar">`;
+        headerIconBox.innerHTML = `<img src="${avatarInfo.customImg}" class="w-full h-full object-cover" alt="Avatar">`;
       } else {
         headerIconBox.innerHTML = `<i class="fa-solid fa-child text-[#f3e5ab]"></i>`;
       }
     }
 
-    function buildSingleJobCardHtml(job, idx) {
-      const colorObj = JOB_COLORS.find(c => c.id === job.color) || JOB_COLORS[0];
-      const jobLv = typeof job.level === 'number' ? job.level : 0;
-
-      const missionsHtml = (job.missions || []).map((m, mIdx) => `
-        <div class="flex items-start justify-between gap-2 bg-[#0c100e]/80 border border-[#d4af37]/20 rounded-xl px-3 py-2 text-xs group hover:border-[#d4af37]/50 transition">
-          <span class="text-[#ede8dc] break-words whitespace-normal leading-relaxed flex-1 min-w-0"><i class="fa-solid fa-scroll text-[#d4af37] mr-2 opacity-75"></i>${m}</span>
-          <div class="flex items-center gap-1.5 flex-shrink-0 pt-0.5">
-            <button onclick="completeJobMission(${idx}, ${mIdx})" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-[11px] shadow transition active:scale-95 flex items-center gap-1 whitespace-nowrap">
-              <i class="fa-solid fa-check"></i>達成
-            </button>
-            <button onclick="deleteJobMission(${idx}, ${mIdx})" class="w-6 h-6 rounded-lg bg-[#141a17] text-[#a8a293] hover:text-rose-400 flex items-center justify-center transition" title="試練を削除">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
-
-      return `
-        <div class="oot-panel rounded-2xl p-5 space-y-4 flex flex-col justify-between">
-          <div class="space-y-3">
-            <div class="flex items-start justify-between gap-2">
-              <div class="flex items-center gap-3 min-w-0">
-                <div class="w-12 h-12 rounded-xl ${colorObj.bg} border ${colorObj.border} flex items-center justify-center text-2xl ${colorObj.text} shadow flex-shrink-0">
-                  <i class="fa-solid ${job.icon || 'fa-hat-wizard'}"></i>
-                </div>
-                <div class="min-w-0">
-                  <div class="flex items-center gap-1.5 flex-wrap">
-                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0c100e] text-[#d4af37] border border-[#d4af37]/30">${job.category || 'その他'}</span>
-                  </div>
-                  <h3 class="font-serif font-bold text-base text-[#f3e5ab] break-words mt-0.5">${job.name}</h3>
-                  <div class="flex items-center gap-2 text-xs text-[#a8a293] mt-0.5">
-                    <span class="font-rpg font-bold text-[#d4af37] text-sm">Lv.${jobLv}</span>
-                    <span>•</span>
-                    <span>試練1回で昇格</span>
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-1 flex-shrink-0">
-                <button onclick="openJobModal(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 text-[#a8a293] hover:text-[#f3e5ab] flex items-center justify-center text-xs transition" title="編集">
-                  <i class="fa-solid fa-pen"></i>
-                </button>
-                <button onclick="confirmDeleteJob(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition" title="消去">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </div>
-            <div class="space-y-2 pt-1">
-              <div class="flex items-center justify-between text-xs font-serif font-bold text-[#a8a293]">
-                <span>授けられた試練</span>
-                <button onclick="openMissionModal(${idx})" class="text-[#d4af37] hover:underline flex items-center gap-1">
-                  <i class="fa-solid fa-plus text-[10px]"></i>試練を追加
-                </button>
-              </div>
-              <div class="space-y-1.5 max-h-44 overflow-y-auto">
-                ${missionsHtml || '<p class="text-xs text-[#6e6a5f] italic py-2 text-center">試練がまだありません</p>'}
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
     window.renderJobs = function() {
       const grid = document.getElementById('jobs-grid');
       const emptyBanner = document.getElementById('empty-jobs-banner');
-      const catFilter = document.getElementById('job-category-filter')?.value || 'all';
       if (!grid) return;
 
       if (window.state.jobs.length === 0) {
@@ -1376,32 +833,60 @@ const firebaseConfig = {
       }
       if (emptyBanner) emptyBanner.classList.add('hidden');
 
-      const indexedJobs = window.state.jobs
-        .map((job, idx) => ({ job, idx }))
-        .filter(({ job }) => catFilter === 'all' || (job.category || 'その他') === catFilter);
+      grid.innerHTML = window.state.jobs.map((job, idx) => {
+        const colorObj = JOB_COLORS.find(c => c.id === job.color) || JOB_COLORS[0];
 
-      if (indexedJobs.length === 0) {
-        grid.innerHTML = `<div class="oot-panel rounded-2xl p-6 text-center text-xs text-[#a8a293]">選択したカテゴリに該当する職業はありません。</div>`;
-        return;
-      }
-
-      const groupOrder = catFilter === 'all'
-        ? [...normalizeCategories(window.state.categories), ...Array.from(new Set(indexedJobs.map(x => x.job.category || 'その他')))]
-        : [catFilter];
-      const uniqueGroups = Array.from(new Set(groupOrder));
-
-      grid.innerHTML = uniqueGroups.map(groupName => {
-        const items = indexedJobs.filter(({ job }) => (job.category || 'その他') === groupName);
-        if (items.length === 0) return '';
-        return `
-          <div class="space-y-3">
-            <div class="flex items-center gap-2 border-b border-[#d4af37]/25 pb-2">
-              <span class="w-2 h-2 rounded-full bg-[#d4af37]"></span>
-              <h3 class="text-sm sm:text-base font-serif font-bold text-[#f3e5ab]">${groupName}</h3>
-              <span class="text-[11px] px-2 py-0.5 rounded-full bg-[#141a17] border border-[#d4af37]/30 text-[#a8a293]">${items.length}職</span>
+        const missionsHtml = (job.missions || []).map((m, mIdx) => `
+          <div class="flex items-center justify-between gap-2 bg-[#0c100e]/80 border border-[#d4af37]/20 rounded-xl px-3 py-2 text-xs group hover:border-[#d4af37]/50 transition">
+            <span class="text-[#ede8dc] truncate flex-1"><i class="fa-solid fa-scroll text-[#d4af37] mr-2 opacity-75"></i>${m}</span>
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button onclick="completeJobMission(${idx}, ${mIdx})" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-[11px] shadow transition active:scale-95 flex items-center gap-1">
+                <i class="fa-solid fa-check"></i>達成
+              </button>
+              <button onclick="deleteJobMission(${idx}, ${mIdx})" class="w-6 h-6 rounded-lg bg-[#141a17] text-[#a8a293] hover:text-rose-400 flex items-center justify-center transition" title="試練を削除">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              ${items.map(({ job, idx }) => buildSingleJobCardHtml(job, idx)).join('')}
+          </div>
+        `).join('');
+
+        return `
+          <div class="oot-panel rounded-2xl p-5 space-y-4 flex flex-col justify-between">
+            <div class="space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl ${colorObj.bg} border ${colorObj.border} flex items-center justify-center text-2xl ${colorObj.text} shadow">
+                    <i class="fa-solid ${job.icon || 'fa-hat-wizard'}"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-serif font-bold text-base text-[#f3e5ab]">${job.name}</h3>
+                    <div class="flex items-center gap-2 text-xs text-[#a8a293] mt-0.5">
+                      <span class="font-rpg font-bold text-[#d4af37] text-sm">Lv.${job.level || 1}</span>
+                      <span>•</span>
+                      <span>試練1回で昇格</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button onclick="openJobModal(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-[#d4af37]/30 text-[#a8a293] hover:text-[#f3e5ab] flex items-center justify-center text-xs transition" title="編集">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                  <button onclick="confirmDeleteJob(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition" title="消去">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between text-xs font-serif font-bold text-[#a8a293]">
+                  <span>授けられた試練</span>
+                  <button onclick="openMissionModal(${idx})" class="text-[#d4af37] hover:underline flex items-center gap-1">
+                    <i class="fa-solid fa-plus text-[10px]"></i>試練を追加
+                  </button>
+                </div>
+                <div class="space-y-1.5 max-h-44 overflow-y-auto">
+                  ${missionsHtml || '<p class="text-xs text-[#6e6a5f] italic py-2 text-center">試練がまだありません</p>'}
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -1412,46 +897,17 @@ const firebaseConfig = {
       window.state.jobs = JSON.parse(JSON.stringify(DEFAULT_PRESET_JOBS));
       saveToFirestore();
       renderAll();
-      showToast("サンプル職業を3種（Lv.0）授かりました！", "success");
+      showToast("サンプル職業を3種授かりました！", "success");
     };
-
-    function buildSingleDailyHtml(d, idx) {
-      const isDone = d.count >= d.maxCount;
-      return `
-        <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-start justify-between gap-3 ${isDone ? 'opacity-70' : ''}">
-          <div class="flex items-start gap-3 min-w-0 flex-1">
-            <button onclick="toggleDaily(${idx})" class="w-8 h-8 rounded-xl border ${isDone ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#0c100e] border-[#d4af37]/40 text-transparent hover:border-[#d4af37]'} flex items-center justify-center transition flex-shrink-0 text-sm mt-0.5">
-              <i class="fa-solid fa-check ${isDone ? 'opacity-100' : 'opacity-0'}"></i>
-            </button>
-            <div class="min-w-0 flex-1">
-              <div class="flex items-center gap-2 flex-wrap">
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#0c100e] text-emerald-300 border border-emerald-500/30">${d.category || '生活・日課'}</span>
-              </div>
-              <div class="text-sm font-serif font-bold text-[#ede8dc] break-words whitespace-normal leading-relaxed mt-0.5 ${isDone ? 'line-through text-[#8e897a]' : ''}">${d.title}</div>
-              <div class="text-[11px] text-[#a8a293] mt-0.5">本日の修行: <strong>${d.count}</strong> / ${d.maxCount}回</div>
-            </div>
-          </div>
-          <div class="flex items-center gap-1.5 flex-shrink-0 pt-0.5">
-            <button onclick="incrementDaily(${idx})" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs shadow transition active:scale-95 whitespace-nowrap">
-              <i class="fa-solid fa-plus mr-1"></i>修行
-            </button>
-            <button onclick="confirmDeleteDaily(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </div>
-        </div>
-      `;
-    }
 
     function renderDailies() {
       const container = document.getElementById('dailies-list');
       const dailyLevelEl = document.getElementById('daily-level-display');
       const dailyProgressEl = document.getElementById('daily-progress-display');
-      const catFilter = document.getElementById('daily-category-filter')?.value || 'all';
       if (!container) return;
 
       const totalDailyCompleted = window.state.logs.filter(l => l.isDaily).length;
-      const dailyLv = Math.floor(totalDailyCompleted / 3);
+      const dailyLv = Math.floor(totalDailyCompleted / 3) + 1;
       const progressInLevel = totalDailyCompleted % 3;
 
       if (dailyLevelEl) dailyLevelEl.textContent = `Lv.${dailyLv}`;
@@ -1462,32 +918,26 @@ const firebaseConfig = {
         return;
       }
 
-      const indexedDailies = window.state.dailies
-        .map((d, idx) => ({ d, idx }))
-        .filter(({ d }) => catFilter === 'all' || (d.category || '生活・日課') === catFilter);
-
-      if (indexedDailies.length === 0) {
-        container.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-6">選択したカテゴリに該当する修行はありません。</p>`;
-        return;
-      }
-
-      const groupOrder = catFilter === 'all'
-        ? [...normalizeCategories(window.state.categories), ...Array.from(new Set(indexedDailies.map(x => x.d.category || '生活・日課')))]
-        : [catFilter];
-      const uniqueGroups = Array.from(new Set(groupOrder));
-
-      container.innerHTML = uniqueGroups.map(groupName => {
-        const items = indexedDailies.filter(({ d }) => (d.category || '生活・日課') === groupName);
-        if (items.length === 0) return '';
+      container.innerHTML = window.state.dailies.map((d, idx) => {
+        const isDone = d.count >= d.maxCount;
         return `
-          <div class="space-y-2.5">
-            <div class="flex items-center gap-2 border-b border-[#d4af37]/20 pb-1.5">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              <h3 class="text-xs sm:text-sm font-serif font-bold text-[#f3e5ab]">${groupName}</h3>
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#0c100e] border border-[#d4af37]/25 text-[#a8a293]">${items.length}件</span>
+          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3 ${isDone ? 'opacity-70' : ''}">
+            <div class="flex items-center gap-3 min-w-0">
+              <button onclick="toggleDaily(${idx})" class="w-8 h-8 rounded-xl border ${isDone ? 'bg-emerald-500 border-emerald-400 text-white' : 'bg-[#0c100e] border-[#d4af37]/40 text-transparent hover:border-[#d4af37]'} flex items-center justify-center transition flex-shrink-0 text-sm">
+                <i class="fa-solid fa-check ${isDone ? 'opacity-100' : 'opacity-0'}"></i>
+              </button>
+              <div class="min-w-0">
+                <div class="text-sm font-serif font-bold text-[#ede8dc] truncate ${isDone ? 'line-through text-[#8e897a]' : ''}">${d.title}</div>
+                <div class="text-[11px] text-[#a8a293] mt-0.5">本日の修行: <strong>${d.count}</strong> / ${d.maxCount}回</div>
+              </div>
             </div>
-            <div class="space-y-2.5">
-              ${items.map(({ d, idx }) => buildSingleDailyHtml(d, idx)).join('')}
+            <div class="flex items-center gap-1.5 flex-shrink-0">
+              <button onclick="incrementDaily(${idx})" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-[#d4af37] to-[#b59128] hover:brightness-110 text-[#0c100e] font-serif font-extrabold text-xs shadow transition active:scale-95">
+                <i class="fa-solid fa-plus mr-1"></i>修行
+              </button>
+              <button onclick="confirmDeleteDaily(${idx})" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition">
+                <i class="fa-solid fa-trash"></i>
+              </button>
             </div>
           </div>
         `;
@@ -1497,10 +947,8 @@ const firebaseConfig = {
     window.addDailyTask = function(e) {
       e.preventDefault();
       const titleInput = document.getElementById('daily-title-input');
-      const catSelect = document.getElementById('daily-category-select');
       const maxInput = document.getElementById('daily-max-input');
       const title = titleInput.value.trim();
-      const category = catSelect?.value || normalizeCategories(window.state.categories)[0] || '生活・日課';
       const maxCount = parseInt(maxInput.value) || 1;
 
       if (!title) {
@@ -1511,7 +959,6 @@ const firebaseConfig = {
       window.state.dailies.push({
         id: 'd_' + Date.now(),
         title,
-        category,
         count: 0,
         maxCount,
         lastResetDate: getTodayStr()
@@ -1527,13 +974,12 @@ const firebaseConfig = {
     window.incrementDaily = function(idx) {
       const d = window.state.dailies[idx];
       d.count++;
-      window.playSoundByEvent('dailyClear');
+      playFanfareSound();
       
       const now = new Date();
       window.state.logs.unshift({
         id: 'log_' + Date.now(),
         jobName: '日々の修行',
-        category: d.category || '生活・日課',
         missionTitle: d.title,
         date: now.toISOString(),
         isDaily: true
@@ -1571,13 +1017,7 @@ const firebaseConfig = {
       const titleEl = document.getElementById('job-modal-title');
       const idInput = document.getElementById('edit-job-id');
       const nameInput = document.getElementById('job-name-input');
-      const catSelect = document.getElementById('job-category-select');
       modal.classList.remove('hidden');
-
-      const cats = normalizeCategories(window.state.categories);
-      if (catSelect) {
-        catSelect.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
-      }
 
       const colorGrid = document.getElementById('color-picker-grid');
       colorGrid.innerHTML = JOB_COLORS.map(c => `
@@ -1598,23 +1038,12 @@ const firebaseConfig = {
         titleEl.innerHTML = `<i class="fa-solid fa-pen text-[#d4af37]"></i><span>職業を編集</span>`;
         idInput.value = editIdx;
         nameInput.value = job.name;
-        if (catSelect) {
-          const initialCat = job.category || cats[0];
-          if (!cats.includes(initialCat)) {
-            const opt = document.createElement('option');
-            opt.value = initialCat;
-            opt.textContent = initialCat;
-            catSelect.appendChild(opt);
-          }
-          catSelect.value = initialCat;
-        }
         selectJobColor(job.color || 'amber');
         selectJobIcon(job.icon || 'fa-hat-wizard');
       } else {
         titleEl.innerHTML = `<i class="fa-solid fa-hat-wizard text-[#d4af37]"></i><span>新たな職業を授かる</span>`;
         idInput.value = '';
         nameInput.value = '';
-        if (catSelect) catSelect.value = cats[0] || 'その他';
         selectJobColor('amber');
         selectJobIcon('fa-hat-wizard');
       }
@@ -1655,7 +1084,6 @@ const firebaseConfig = {
     window.saveJob = function() {
       const editIdx = document.getElementById('edit-job-id').value;
       const name = document.getElementById('job-name-input').value.trim();
-      const category = document.getElementById('job-category-select')?.value || normalizeCategories(window.state.categories)[0] || 'その他';
       if (!name) {
         showToast("職業名を入力してください", "error");
         return;
@@ -1664,22 +1092,20 @@ const firebaseConfig = {
       if (editIdx !== '') {
         const job = window.state.jobs[editIdx];
         job.name = name;
-        job.category = category;
         job.color = selectedColorId;
         job.icon = selectedIconName;
         showToast("職業の記録を更新しました", "success");
       } else {
         window.state.jobs.push({
           name,
-          category,
           color: selectedColorId,
           icon: selectedIconName,
-          level: 0,
+          level: 1,
           currentExp: 0,
           nextExp: 1,
           missions: []
         });
-        showToast("新たな職業（Lv.0）を授かりました！", "success");
+        showToast("新たな職業を授かりました！", "success");
       }
 
       closeJobModal();
@@ -1731,22 +1157,19 @@ const firebaseConfig = {
       showToast("試練を取り下げました", "info");
     };
 
-    // 試練達成（1回達成ごとにレベルアップし、達成した試練を一覧から消去）
+    // 試練達成（1回達成ごとに必ずレベルアップ）
     window.completeJobMission = function(jobIdx, missionIdx) {
       const job = window.state.jobs[jobIdx];
       const missionTitle = job.missions[missionIdx];
 
-      job.missions.splice(missionIdx, 1);
-      job.level = (typeof job.level === 'number' ? job.level : 0) + 1;
+      job.level = (job.level || 1) + 1;
       job.currentExp = 0;
       job.nextExp = 1;
-
-      window.playSoundByEvent('missionClear');
+      playFanfareSound();
 
       window.state.logs.unshift({
         id: 'log_' + Date.now(),
         jobName: job.name,
-        category: job.category || 'その他',
         missionTitle: missionTitle,
         date: new Date().toISOString(),
         isDaily: false
@@ -1764,59 +1187,10 @@ const firebaseConfig = {
       document.getElementById('levelup-title-text').textContent = `レベルアップ！ (Lv.${job.level})`;
       document.getElementById('levelup-mission-text').textContent = `おめでとうございます！「${job.name}」の力が一段と目覚めました。`;
       document.getElementById('levelup-modal').classList.remove('hidden');
-      window.playSoundByEvent('levelUp');
     };
 
     window.closeLevelUpModal = function() {
       document.getElementById('levelup-modal').classList.add('hidden');
-    };
-
-    function syncCalendarYearMonthControls() {
-      const yearSelect = document.getElementById('calendar-year-select');
-      const monthSelect = document.getElementById('calendar-month-select');
-      const monthPicker = document.getElementById('calendar-month-picker');
-      if (!yearSelect || !monthSelect) return;
-
-      const currentYear = new Date().getFullYear();
-      const yearsSet = new Set();
-      for (let y = currentYear - 3; y <= currentYear + 2; y++) yearsSet.add(y);
-      yearsSet.add(window.state.calendarYear);
-      (window.state.logs || []).forEach(l => {
-        const d = new Date(l.date);
-        if (!Number.isNaN(d.getTime())) yearsSet.add(d.getFullYear());
-      });
-
-      const sortedYears = Array.from(yearsSet).sort((a, b) => a - b);
-      yearSelect.innerHTML = sortedYears.map(y => `<option value="${y}">${y}年</option>`).join('');
-      yearSelect.value = String(window.state.calendarYear);
-      monthSelect.value = String(window.state.calendarMonth);
-
-      if (monthPicker) {
-        monthPicker.value = `${window.state.calendarYear}-${String(window.state.calendarMonth + 1).padStart(2, '0')}`;
-      }
-    }
-
-    window.onCalendarYearMonthChange = function() {
-      const yearSelect = document.getElementById('calendar-year-select');
-      const monthSelect = document.getElementById('calendar-month-select');
-      if (yearSelect) window.state.calendarYear = parseInt(yearSelect.value, 10);
-      if (monthSelect) window.state.calendarMonth = parseInt(monthSelect.value, 10);
-      renderCalendar();
-    };
-
-    window.onCalendarMonthPickerChange = function(ymValue) {
-      if (!ymValue || !/^\d{4}-\d{2}$/.test(ymValue)) return;
-      const [yStr, mStr] = ymValue.split('-');
-      window.state.calendarYear = parseInt(yStr, 10);
-      window.state.calendarMonth = Math.min(11, Math.max(0, parseInt(mStr, 10) - 1));
-      renderCalendar();
-    };
-
-    window.jumpCalendarToToday = function() {
-      const now = new Date();
-      window.state.calendarYear = now.getFullYear();
-      window.state.calendarMonth = now.getMonth();
-      renderCalendar();
     };
 
     window.changeCalendarMonth = function(direction) {
@@ -1836,11 +1210,9 @@ const firebaseConfig = {
       const gridEl = document.getElementById('calendar-grid');
       if (!gridEl) return;
 
-      syncCalendarYearMonthControls();
-
       const year = window.state.calendarYear;
       const month = window.state.calendarMonth;
-      if (titleEl) titleEl.textContent = `${year}年 ${month + 1}月の時暦`;
+      titleEl.textContent = `${year}年 ${month + 1}月の時暦`;
 
       const firstDay = new Date(year, month, 1).getDay();
       const lastDate = new Date(year, month + 1, 0).getDate();
@@ -1890,79 +1262,24 @@ const firebaseConfig = {
 
       itemsEl.innerHTML = matchedLogs.map(l => `
         <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3 space-y-1">
-          <div class="flex items-center gap-1.5 flex-wrap text-[10px] font-bold text-[#d4af37]">
-            <span>${l.jobName}</span>
-            <span>•</span>
-            <span class="text-emerald-300">${l.category || 'その他'}</span>
-          </div>
-          <div class="text-xs text-[#ede8dc] font-serif break-words">${l.missionTitle}</div>
+          <div class="text-[10px] font-bold text-[#d4af37]">${l.jobName}</div>
+          <div class="text-xs text-[#ede8dc] font-serif">${l.missionTitle}</div>
         </div>
       `).join('');
     };
 
-    function getLogYearMonthKey(isoDateStr) {
-      const d = new Date(isoDateStr);
-      if (Number.isNaN(d.getTime())) return '';
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
-    }
-
-    function syncLogMonthFilterOptions() {
-      const monthFilter = document.getElementById('log-filter-month');
-      if (!monthFilter) return;
-      const prev = monthFilter.value || 'all';
-
-      const ymSet = new Set();
-      (window.state.logs || []).forEach(l => {
-        const ym = getLogYearMonthKey(l.date);
-        if (ym) ymSet.add(ym);
-      });
-
-      const sortedYms = Array.from(ymSet).sort((a, b) => b.localeCompare(a));
-      monthFilter.innerHTML = `<option value="all">すべての年月</option>` +
-        sortedYms.map(ym => {
-          const [y, m] = ym.split('-');
-          return `<option value="${ym}">${y}年${parseInt(m, 10)}月</option>`;
-        }).join('');
-
-      monthFilter.value = Array.from(monthFilter.options).some(o => o.value === prev) ? prev : 'all';
-    }
-
-    window.resetLogFilters = function() {
-      const mEl = document.getElementById('log-filter-month');
-      const cEl = document.getElementById('log-filter-category');
-      const jEl = document.getElementById('log-filter-job');
-      if (mEl) mEl.value = 'all';
-      if (cEl) cEl.value = 'all';
-      if (jEl) jEl.value = 'all';
-      renderLogs();
-    };
-
     function renderLogs() {
       const container = document.getElementById('logs-list');
-      const filterJob = document.getElementById('log-filter-job')?.value || 'all';
-      const filterCategory = document.getElementById('log-filter-category')?.value || 'all';
+      const filterJob = document.getElementById('log-filter-job').value;
       if (!container) return;
 
-      syncLogMonthFilterOptions();
-      const filterMonth = document.getElementById('log-filter-month')?.value || 'all';
-
-      let filtered = window.state.logs || [];
+      let filtered = window.state.logs;
       if (filterJob === 'daily') {
-        filtered = filtered.filter(l => Boolean(l.isDaily));
-      } else if (filterJob === 'job') {
-        filtered = filtered.filter(l => !l.isDaily);
-      }
-
-      if (filterCategory !== 'all') {
-        filtered = filtered.filter(l => (l.category || 'その他') === filterCategory);
-      }
-
-      if (filterMonth !== 'all') {
-        filtered = filtered.filter(l => getLogYearMonthKey(l.date) === filterMonth);
+        filtered = window.state.logs.filter(l => l.isDaily);
       }
 
       if (filtered.length === 0) {
-        container.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-8">条件に一致する達成記録はありません。</p>`;
+        container.innerHTML = `<p class="text-xs text-[#a8a293] text-center py-8">達成記録がまだありません。</p>`;
         return;
       }
 
@@ -1970,18 +1287,17 @@ const firebaseConfig = {
         const d = new Date(l.date);
         const dateFormatted = `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
         return `
-          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-start justify-between gap-3">
-            <div class="flex items-start gap-3 min-w-0 flex-1">
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-base flex-shrink-0 mt-0.5">
+          <div class="oot-panel rounded-xl p-3.5 sm:p-4 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-base flex-shrink-0">
                 <i class="fa-solid fa-check"></i>
               </div>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2 flex-wrap">
+              <div class="min-w-0">
+                <div class="flex items-center gap-2">
                   <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#d4af37]/15 text-[#f3e5ab] border border-[#d4af37]/30">${l.jobName}</span>
-                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">${l.category || 'その他'}</span>
                   <span class="text-[11px] text-[#a8a293]">${dateFormatted}</span>
                 </div>
-                <div class="text-sm font-serif font-bold text-[#ede8dc] mt-1 break-words whitespace-normal leading-relaxed">${l.missionTitle}</div>
+                <div class="text-sm font-serif font-bold text-[#ede8dc] mt-1 truncate">${l.missionTitle}</div>
               </div>
             </div>
             <button onclick="confirmDeleteLog('${l.id}')" class="w-7 h-7 rounded-lg bg-[#0c100e] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-xs transition flex-shrink-0" title="消去">
@@ -2008,81 +1324,42 @@ const firebaseConfig = {
       const container = document.getElementById('avatar-stages-settings');
       if (!container) return;
 
-      const canDelete = window.state.avatarStages.length > 1;
-
       container.innerHTML = window.state.avatarStages.map((stage, idx) => {
-        const customImg = getStageCustomImage(stage, idx);
+        const customImg = window.state.avatarCustoms[`stage_${idx}`] || window.state.avatarCustoms[stage.minLv];
         return `
           <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-4 space-y-3">
             <div class="flex items-start justify-between gap-2.5">
               <div class="flex-1 space-y-2">
-                <div class="flex items-center justify-between gap-1.5">
-                  <div class="flex items-center gap-1.5">
-                    <span class="text-[11px] font-rpg font-bold text-[#d4af37]">Lv.</span>
-                    <input type="number" min="0" max="999" value="${stage.minLv}" onchange="updateAvatarStage(${idx}, 'minLv', this.value)" class="w-16 bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2 py-1 text-xs font-rpg font-bold text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
-                    <span class="text-[11px] text-[#a8a293]">〜</span>
-                  </div>
-                  ${canDelete ? `
-                    <button type="button" onclick="deleteAvatarStage(${idx})" class="w-6 h-6 rounded-lg bg-[#141a17] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-[11px] transition" title="この段階を削除">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
-                  ` : ''}
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[11px] font-rpg font-bold text-[#d4af37]">Lv.</span>
+                  <input type="number" min="1" max="999" value="${stage.minLv}" onchange="updateAvatarStage(${idx}, 'minLv', this.value)" class="w-16 bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2 py-1 text-xs font-rpg font-bold text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
+                  <span class="text-[11px] text-[#a8a293]">〜</span>
                 </div>
                 <input type="text" value="${stage.name}" placeholder="称号名を入力" onchange="updateAvatarStage(${idx}, 'name', this.value)" class="w-full bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-sm font-serif font-bold text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]" />
               </div>
               <div class="w-14 h-14 rounded-xl bg-[#141a17] border border-[#d4af37]/40 overflow-hidden flex items-center justify-center text-[#f3e5ab] text-lg flex-shrink-0">
-                ${customImg ? `<img src="${customImg}" class="w-full h-full object-contain p-0.5">` : `<i class="fa-solid fa-child"></i>`}
+                ${customImg ? `<img src="${customImg}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-child"></i>`}
               </div>
             </div>
             <div class="flex items-center gap-2 pt-1">
               <label class="flex-1 py-2 px-3 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] font-serif font-bold text-xs text-center cursor-pointer transition">
                 <i class="fa-solid fa-upload mr-1.5"></i>画像を選択
-                <input type="file" accept="image/png,image/webp,image/jpeg,image/*" class="hidden" onchange="uploadAvatarImage(event, ${idx})">
+                <input type="file" accept="image/*" class="hidden" onchange="uploadAvatarImage(event, ${idx})">
               </label>
-              ${customImg ? `<button type="button" onclick="removeAvatarImage(${idx})" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-bold transition">画像消去</button>` : ''}
+              ${customImg ? `<button onclick="removeAvatarImage(${idx})" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-bold transition">画像消去</button>` : ''}
             </div>
           </div>
         `;
       }).join('');
     }
 
-    window.addAvatarStage = function() {
-      const maxLv = window.state.avatarStages.reduce((max, s) => Math.max(max, s.minLv || 0), 0);
-      const nextLv = maxLv + 10;
-      const id = `stage_${Date.now()}`;
-      window.state.avatarStages.push({
-        id,
-        minLv: nextLv,
-        name: `新たな称号 (Lv.${nextLv})`,
-        desc: '追加した冒険の段階'
-      });
-      saveToFirestore();
-      renderAll();
-      showToast(`Lv.${nextLv}〜 の段階を追加しました！`, "success");
-    };
-
-    window.deleteAvatarStage = function(idx) {
-      if (window.state.avatarStages.length <= 1) {
-        showToast("最低1つの段階は必要です", "error");
-        return;
-      }
-      const target = window.state.avatarStages[idx];
-      openConfirmModal("段階の削除", `「${target.name}（Lv.${target.minLv}〜）」を削除しますか？`, () => {
-        if (target?.id) delete window.state.avatarCustoms[target.id];
-        delete window.state.avatarCustoms[`stage_${idx}`];
-        window.state.avatarStages.splice(idx, 1);
-        saveToFirestore();
-        renderAll();
-        showToast("段階を削除しました", "info");
-      });
-    };
-
+    // レベル帯・称号名の更新
     window.updateAvatarStage = function(idx, field, value) {
       const stage = window.state.avatarStages[idx];
       if (!stage) return;
 
       if (field === 'minLv') {
-        const num = Math.max(0, parseInt(value) || 0);
+        const num = Math.max(1, parseInt(value) || 1);
         stage.minLv = num;
       } else if (field === 'name') {
         const trimmed = value.trim();
@@ -2099,6 +1376,7 @@ const firebaseConfig = {
       showToast("レベル段階の設定を更新しました！", "success");
     };
 
+    // レベル段階の初期値リセット
     window.resetAvatarStages = function() {
       openConfirmModal("初期設定に戻す", "レベル帯と称号名の設定を初期状態に戻しますか？（設定済みの画像は保持されます）", () => {
         window.state.avatarStages = JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES));
@@ -2111,8 +1389,6 @@ const firebaseConfig = {
     window.uploadAvatarImage = function(e, stageIdx) {
       const file = e.target.files[0];
       if (!file) return;
-      const stage = window.state.avatarStages[stageIdx];
-      if (!stage) return;
 
       const reader = new FileReader();
       reader.onload = function(event) {
@@ -2130,14 +1406,13 @@ const firebaseConfig = {
             if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
           }
 
-          canvas.width = Math.round(width);
-          canvas.height = Math.round(height);
+          canvas.width = width;
+          canvas.height = height;
           const ctx = canvas.getContext('2d');
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, width, height);
 
-          const dataUrl = canvas.toDataURL('image/png');
-          window.state.avatarCustoms[stage.id] = dataUrl;
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          window.state.avatarCustoms[`stage_${stageIdx}`] = dataUrl;
           saveToFirestore();
           renderAll();
           showToast("レベル別アイコン画像を設定しました！", "success");
@@ -2149,184 +1424,11 @@ const firebaseConfig = {
 
     window.removeAvatarImage = function(stageIdx) {
       const stage = window.state.avatarStages[stageIdx];
-      if (stage?.id) delete window.state.avatarCustoms[stage.id];
       delete window.state.avatarCustoms[`stage_${stageIdx}`];
       if (stage) delete window.state.avatarCustoms[stage.minLv];
       saveToFirestore();
       renderAll();
       showToast("アイコン画像を消去しました", "info");
-    };
-
-    // 音声ファイル追加・削除
-    window.uploadCustomSoundFile = function(e) {
-      const file = e.target.files?.[0];
-      e.target.value = '';
-      if (!file) return;
-
-      const MAX_BYTES = 700 * 1024;
-      if (file.size > MAX_BYTES) {
-        showToast("ファイルサイズが大きすぎます（約700KB以下の短い音声をお試しください）", "error");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        const dataUrl = event.target?.result;
-        if (!dataUrl || typeof dataUrl !== 'string') {
-          showToast("音声ファイルの読み込みに失敗しました", "error");
-          return;
-        }
-        const id = `custom_${Date.now()}`;
-        const cleanName = file.name.replace(/\.[^/.]+$/, '') || 'カスタム音声';
-        window.state.customSounds = normalizeCustomSounds([
-          ...(window.state.customSounds || []),
-          { id, name: cleanName, dataUrl }
-        ]);
-        saveToFirestore();
-        renderSoundSettings();
-        showToast(`音声「${cleanName}」を追加しました！`, "success");
-      };
-      reader.readAsDataURL(file);
-    };
-
-    window.deleteCustomSoundFile = function(soundId) {
-      const target = (window.state.customSounds || []).find(s => s.id === soundId);
-      if (!target) return;
-
-      openConfirmModal("音声ファイルの削除", `音声「${target.name}」を削除しますか？設定中のシーンは既定の音色に戻ります。`, () => {
-        window.state.customSounds = (window.state.customSounds || []).filter(s => s.id !== soundId);
-        SOUND_EVENTS.forEach(ev => {
-          if (window.state.soundSettings?.[ev.key]?.preset === soundId) {
-            window.state.soundSettings[ev.key].preset = DEFAULT_SOUND_SETTINGS[ev.key].preset;
-          }
-        });
-        saveToFirestore();
-        renderSoundSettings();
-        showToast("音声ファイルを削除しました", "info");
-      });
-    };
-
-    function renderSoundSettings() {
-      const customListEl = document.getElementById('custom-audio-list');
-      const container = document.getElementById('sound-effects-settings');
-      const masterToggle = document.getElementById('sound-toggle');
-      if (masterToggle) masterToggle.checked = Boolean(window.state.soundEnabled);
-
-      const customSounds = normalizeCustomSounds(window.state.customSounds);
-      window.state.customSounds = customSounds;
-
-      if (customListEl) {
-        if (customSounds.length === 0) {
-          customListEl.innerHTML = `<p class="text-[11px] text-[#6e6a5f]">追加された音声ファイルはありません（内蔵音色を利用中）。</p>`;
-        } else {
-          customListEl.innerHTML = customSounds.map(s => `
-            <div class="flex items-center justify-between gap-2 bg-[#141a17] border border-[#d4af37]/25 rounded-lg px-3 py-1.5 text-xs">
-              <span class="text-[#ede8dc] truncate"><i class="fa-solid fa-volume-high text-emerald-400 mr-1.5"></i>${s.name}</span>
-              <div class="flex items-center gap-1.5 flex-shrink-0">
-                <button type="button" onclick="previewSoundPreset('${s.id}')" class="px-2 py-1 rounded bg-[#1b241f] hover:bg-[#232f28] text-[#f3e5ab] text-[11px] font-bold transition">
-                  <i class="fa-solid fa-play mr-1"></i>再生
-                </button>
-                <button type="button" onclick="deleteCustomSoundFile('${s.id}')" class="w-6 h-6 rounded bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 flex items-center justify-center text-[11px] transition" title="削除">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          `).join('');
-        }
-      }
-
-      if (!container) return;
-
-      const settings = normalizeSoundSettings(window.state.soundSettings);
-      window.state.soundSettings = settings;
-
-      const presetGroupsHtml = `
-        <optgroup label="内蔵音色">
-          ${SOUND_PRESETS.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
-        </optgroup>
-        ${customSounds.length > 0 ? `
-          <optgroup label="追加した音声ファイル">
-            ${customSounds.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
-          </optgroup>
-        ` : ''}
-      `;
-
-      container.innerHTML = SOUND_EVENTS.map(ev => {
-        const cfg = settings[ev.key];
-        const tempDiv = document.createElement('select');
-        tempDiv.innerHTML = presetGroupsHtml;
-        Array.from(tempDiv.querySelectorAll('option')).forEach(opt => {
-          if (opt.value === cfg.preset) opt.selected = true;
-        });
-
-        return `
-          <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${!window.state.soundEnabled ? 'opacity-60' : ''}">
-            <div class="min-w-0">
-              <div class="text-sm font-serif font-bold text-[#f3e5ab]">${ev.label}</div>
-              <div class="text-[11px] text-[#a8a293] mt-0.5">${ev.desc}</div>
-            </div>
-            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-              <select onchange="updateSoundEffectPreset('${ev.key}', this.value)" class="max-w-[200px] bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-xs text-[#ede8dc] focus:outline-none focus:border-[#d4af37]">
-                ${tempDiv.innerHTML}
-              </select>
-              <button type="button" onclick="previewSoundEffect('${ev.key}')" class="px-2.5 py-1.5 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] text-xs font-bold transition whitespace-nowrap" title="試聴">
-                <i class="fa-solid fa-play mr-1"></i>試聴
-              </button>
-              <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
-                <input type="checkbox" ${cfg.enabled ? 'checked' : ''} onchange="updateSoundEffectEnabled('${ev.key}', this.checked)" class="sr-only peer">
-                <div class="w-10 h-5 bg-[#141a17] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#f3e5ab] after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#d4af37]"></div>
-              </label>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    window.toggleMasterSound = function(enabled) {
-      window.state.soundEnabled = Boolean(enabled);
-      if (!window.state.soundEnabled) stopActiveCustomAudio();
-      saveToFirestore();
-      renderSoundSettings();
-      showToast(window.state.soundEnabled ? "効果音を有効にしました" : "効果音を消音にしました", "info");
-    };
-
-    window.updateSoundEffectEnabled = function(eventKey, enabled) {
-      window.state.soundSettings = normalizeSoundSettings(window.state.soundSettings);
-      window.state.soundSettings[eventKey].enabled = Boolean(enabled);
-      saveToFirestore();
-      showToast("効果音のON/OFFを更新しました", "success");
-    };
-
-    window.updateSoundEffectPreset = function(eventKey, presetId) {
-      window.state.soundSettings = normalizeSoundSettings(window.state.soundSettings);
-      window.state.soundSettings[eventKey].preset = presetId;
-      saveToFirestore();
-      window.playSoundByEvent(eventKey);
-      showToast("効果音の音源を変更しました", "success");
-    };
-
-    window.previewSoundPreset = function(presetId) {
-      if (presetId.startsWith('custom_')) {
-        playCustomAudioById(presetId);
-        return;
-      }
-      const prevMaster = window.state.soundEnabled;
-      window.state.soundEnabled = true;
-      const tempSettings = normalizeSoundSettings(window.state.soundSettings);
-      const prevPreset = tempSettings.missionClear.preset;
-      const prevEnabled = tempSettings.missionClear.enabled;
-      tempSettings.missionClear.preset = presetId;
-      tempSettings.missionClear.enabled = true;
-      window.state.soundSettings = tempSettings;
-      window.playSoundByEvent('missionClear');
-      tempSettings.missionClear.preset = prevPreset;
-      tempSettings.missionClear.enabled = prevEnabled;
-      window.state.soundEnabled = prevMaster;
-    };
-
-    window.previewSoundEffect = function(eventKey) {
-      const settings = normalizeSoundSettings(window.state.soundSettings);
-      window.previewSoundPreset(settings[eventKey].preset);
     };
 
     let confirmCallback = null;
@@ -2375,8 +1477,6 @@ const firebaseConfig = {
         setTimeout(() => toast.remove(), 300);
       }, 3000);
     };
-
-    renderAll();
   </script>
 </body>
 </html>
