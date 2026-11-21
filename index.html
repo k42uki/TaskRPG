@@ -358,7 +358,7 @@
               <span>冒険者の姿・レベル別アイコン設定</span>
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-              各段階の「必要総レベル」「称号名」「アイコン画像」を自由にカスタマイズできます。
+              各段階の「必要総レベル」「称号名」「アイコン画像（背景透過PNG/WebP対応）」を自由に設定できます。
             </p>
           </div>
           <button onclick="resetAvatarStages()" class="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#0c100e] hover:bg-[#1b241f] border border-[#d4af37]/30 text-[11px] text-[#a8a293] hover:text-[#f3e5ab] transition whitespace-nowrap">
@@ -816,7 +816,7 @@ const firebaseConfig = {
 
       const headerIconBox = document.getElementById('header-avatar-icon');
       if (avatarInfo.customImg) {
-        headerIconBox.innerHTML = `<img src="${avatarInfo.customImg}" class="w-full h-full object-cover" alt="Avatar">`;
+        headerIconBox.innerHTML = `<img src="${avatarInfo.customImg}" class="w-full h-full object-contain p-0.5" alt="Avatar">`;
       } else {
         headerIconBox.innerHTML = `<i class="fa-solid fa-child text-[#f3e5ab]"></i>`;
       }
@@ -1341,13 +1341,13 @@ const firebaseConfig = {
                 <input type="text" value="${stage.name}" placeholder="称号名を入力" onchange="updateAvatarStage(${idx}, 'name', this.value)" class="w-full bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-sm font-serif font-bold text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]" />
               </div>
               <div class="w-14 h-14 rounded-xl bg-[#141a17] border border-[#d4af37]/40 overflow-hidden flex items-center justify-center text-[#f3e5ab] text-lg flex-shrink-0">
-                ${customImg ? `<img src="${customImg}" class="w-full h-full object-cover">` : `<i class="fa-solid fa-child"></i>`}
+                ${customImg ? `<img src="${customImg}" class="w-full h-full object-contain p-0.5">` : `<i class="fa-solid fa-child"></i>`}
               </div>
             </div>
             <div class="flex items-center gap-2 pt-1">
               <label class="flex-1 py-2 px-3 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] font-serif font-bold text-xs text-center cursor-pointer transition">
                 <i class="fa-solid fa-upload mr-1.5"></i>画像を選択
-                <input type="file" accept="image/*" class="hidden" onchange="uploadAvatarImage(event, ${idx})">
+                <input type="file" accept="image/png,image/webp,image/jpeg,image/*" class="hidden" onchange="uploadAvatarImage(event, ${idx})">
               </label>
               ${customImg ? `<button onclick="removeAvatarImage(${idx})" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-bold transition">画像消去</button>` : ''}
             </div>
@@ -1389,6 +1389,7 @@ const firebaseConfig = {
       });
     };
 
+    // 背景透過対応（PNGフォーマットでアルファチャンネルを保持して保存）
     window.uploadAvatarImage = function(e, stageIdx) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1409,12 +1410,14 @@ const firebaseConfig = {
             if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
           }
 
-          canvas.width = width;
-          canvas.height = height;
+          canvas.width = Math.round(width);
+          canvas.height = Math.round(height);
           const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          // 透過情報を保持するため PNG 形式で書き出し
+          const dataUrl = canvas.toDataURL('image/png');
           window.state.avatarCustoms[`stage_${stageIdx}`] = dataUrl;
           saveToFirestore();
           renderAll();
