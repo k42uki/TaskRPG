@@ -650,12 +650,26 @@ const firebaseConfig = {
 };
 
     let synth = null;
+    let nextSynthStartTime = 0;
+    let activeCustomAudio = null;
+
     function initSynth() {
       if (!synth) {
         synth = new Tone.PolySynth(Tone.Synth, {
+          maxPolyphony: 8,
           oscillator: { type: "triangle" },
           envelope: { attack: 0.008, decay: 0.14, sustain: 0.25, release: 0.9 }
         }).toDestination();
+      }
+    }
+
+    function stopActiveCustomAudio() {
+      if (activeCustomAudio) {
+        try {
+          activeCustomAudio.pause();
+          activeCustomAudio.currentTime = 0;
+        } catch (e) {}
+        activeCustomAudio = null;
       }
     }
 
@@ -663,7 +677,12 @@ const firebaseConfig = {
       const item = (window.state.customSounds || []).find(s => s.id === soundId);
       if (!item || !item.dataUrl) return false;
       try {
+        stopActiveCustomAudio();
         const audio = new Audio(item.dataUrl);
+        activeCustomAudio = audio;
+        audio.addEventListener('ended', () => {
+          if (activeCustomAudio === audio) activeCustomAudio = null;
+        });
         audio.currentTime = 0;
         audio.play().catch(() => {});
         return true;
@@ -686,29 +705,34 @@ const firebaseConfig = {
         initSynth();
         if (Tone.context.state !== 'running') { Tone.start(); }
         const now = Tone.now();
+        const start = Math.max(now, nextSynthStartTime);
 
         if (preset === 'fanfare') {
           synth.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.8 } });
-          synth.triggerAttackRelease("C5", "8n", now);
-          synth.triggerAttackRelease("E5", "8n", now + 0.11);
-          synth.triggerAttackRelease("G5", "8n", now + 0.22);
-          synth.triggerAttackRelease("C6", "4n", now + 0.33);
+          synth.triggerAttackRelease("C5", "8n", start);
+          synth.triggerAttackRelease("E5", "8n", start + 0.11);
+          synth.triggerAttackRelease("G5", "8n", start + 0.22);
+          synth.triggerAttackRelease("C6", "4n", start + 0.33);
+          nextSynthStartTime = start + 0.75;
         } else if (preset === 'ocarina') {
           synth.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.04, decay: 0.15, sustain: 0.4, release: 1.1 } });
-          synth.triggerAttackRelease("G4", "8n", now);
-          synth.triggerAttackRelease("B4", "8n", now + 0.14);
-          synth.triggerAttackRelease("D5", "8n", now + 0.28);
-          synth.triggerAttackRelease("G5", "4n", now + 0.42);
+          synth.triggerAttackRelease("G4", "8n", start);
+          synth.triggerAttackRelease("B4", "8n", start + 0.14);
+          synth.triggerAttackRelease("D5", "8n", start + 0.28);
+          synth.triggerAttackRelease("G5", "4n", start + 0.42);
+          nextSynthStartTime = start + 0.9;
         } else if (preset === 'crystal') {
           synth.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.002, decay: 0.08, sustain: 0.15, release: 0.6 } });
-          synth.triggerAttackRelease("E5", "16n", now);
-          synth.triggerAttackRelease("A5", "16n", now + 0.08);
-          synth.triggerAttackRelease("C#6", "16n", now + 0.16);
-          synth.triggerAttackRelease("E6", "8n", now + 0.24);
+          synth.triggerAttackRelease("E5", "16n", start);
+          synth.triggerAttackRelease("A5", "16n", start + 0.08);
+          synth.triggerAttackRelease("C#6", "16n", start + 0.16);
+          synth.triggerAttackRelease("E6", "8n", start + 0.24);
+          nextSynthStartTime = start + 0.65;
         } else if (preset === 'bell') {
           synth.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.25, sustain: 0.35, release: 1.4 } });
-          synth.triggerAttackRelease(["C4", "G4"], "4n", now);
-          synth.triggerAttackRelease(["E4", "C5"], "2n", now + 0.28);
+          synth.triggerAttackRelease(["C4", "G4"], "4n", start);
+          synth.triggerAttackRelease(["E4", "C5"], "2n", start + 0.28);
+          nextSynthStartTime = start + 1.1;
         }
       } catch (e) {}
     };
@@ -1321,7 +1345,6 @@ const firebaseConfig = {
       job.nextExp = 1;
 
       window.playSoundByEvent('missionClear');
-      setTimeout(() => window.playSoundByEvent('levelUp'), 260);
 
       window.state.logs.unshift({
         id: 'log_' + Date.now(),
@@ -1343,6 +1366,7 @@ const firebaseConfig = {
       document.getElementById('levelup-title-text').textContent = `レベルアップ！ (Lv.${job.level})`;
       document.getElementById('levelup-mission-text').textContent = `おめでとうございます！「${job.name}」の力が一段と目覚めました。`;
       document.getElementById('levelup-modal').classList.remove('hidden');
+      window.playSoundByEvent('levelUp');
     };
 
     window.closeLevelUpModal = function() {
@@ -1760,6 +1784,7 @@ const firebaseConfig = {
 
     window.toggleMasterSound = function(enabled) {
       window.state.soundEnabled = Boolean(enabled);
+      if (!window.state.soundEnabled) stopActiveCustomAudio();
       saveToFirestore();
       renderSoundSettings();
       showToast(window.state.soundEnabled ? "効果音を有効にしました" : "効果音を消音にしました", "info");
