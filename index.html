@@ -351,21 +351,46 @@
 
       <!-- キャラクター画像・レベル帯・称号カスタム設定カード -->
       <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#d4af37]/25 pb-3">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-[#d4af37]/25 pb-3">
           <div>
             <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
               <i class="fa-solid fa-user-astronaut text-[#d4af37]"></i>
               <span>冒険者の姿・レベル別アイコン設定</span>
             </h2>
             <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
-              各段階の「必要総レベル」「称号名」「アイコン画像（背景透過PNG/WebP対応）」を自由に設定できます。
+              段階の追加・削除や、「必要総レベル」「称号名」「透過アイコン画像」を自由に設定できます。
             </p>
           </div>
-          <button onclick="resetAvatarStages()" class="self-start sm:self-auto px-3 py-1.5 rounded-lg bg-[#0c100e] hover:bg-[#1b241f] border border-[#d4af37]/30 text-[11px] text-[#a8a293] hover:text-[#f3e5ab] transition whitespace-nowrap">
-            <i class="fa-solid fa-rotate-left mr-1"></i>初期設定に戻す
-          </button>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <button onclick="addAvatarStage()" class="px-3 py-1.5 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white font-serif font-bold text-xs shadow transition active:scale-95 whitespace-nowrap">
+              <i class="fa-solid fa-plus mr-1"></i>段階を追加
+            </button>
+            <button onclick="resetAvatarStages()" class="px-3 py-1.5 rounded-lg bg-[#0c100e] hover:bg-[#1b241f] border border-[#d4af37]/30 text-[11px] text-[#a8a293] hover:text-[#f3e5ab] transition whitespace-nowrap">
+              <i class="fa-solid fa-rotate-left mr-1"></i>初期設定に戻す
+            </button>
+          </div>
         </div>
         <div id="avatar-stages-settings" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+      </div>
+
+      <!-- 各効果音カスタム設定カード -->
+      <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between gap-2 border-b border-[#d4af37]/25 pb-3">
+          <div>
+            <h2 class="text-lg font-serif font-bold text-[#f3e5ab] flex items-center gap-2">
+              <i class="fa-solid fa-music text-[#d4af37]"></i>
+              <span>効果音（SE）個別設定</span>
+            </h2>
+            <p class="text-xs sm:text-sm text-[#a8a293] mt-1">
+              シーンごとに効果音の ON/OFF と音色（ファンファーレ・オカリナ風・クリスタル・ベル）を設定できます。
+            </p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer flex-shrink-0" title="全体のサウンド有効/無効">
+            <input type="checkbox" id="sound-toggle" checked class="sr-only peer" onchange="toggleMasterSound(this.checked)">
+            <div class="w-11 h-6 bg-[#0c100e] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-[#f3e5ab] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#d4af37]"></div>
+          </label>
+        </div>
+        <div id="sound-effects-settings" class="space-y-3"></div>
       </div>
 
       <!-- 時空の同期カード -->
@@ -403,19 +428,6 @@
         </div>
       </div>
 
-      <!-- サウンド設定 -->
-      <div class="oot-panel rounded-2xl p-5 sm:p-6 space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <h3 class="text-sm font-serif font-bold text-[#f3e5ab]">オカリナ ＆ 宝箱の音色</h3>
-            <p class="text-xs text-[#a8a293]">試練達成時に神秘的なファンファーレを奏でます</p>
-          </div>
-          <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="sound-toggle" checked class="sr-only peer" onchange="state.soundEnabled = this.checked">
-            <div class="w-11 h-6 bg-[#0c100e] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-[#f3e5ab] after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#d4af37]"></div>
-          </label>
-        </div>
-      </div>
     </section>
 
   </main>
@@ -567,13 +579,32 @@
     ];
 
     const DEFAULT_AVATAR_STAGES = [
-      { minLv: 0,  name: "コキリの少年", desc: "冒険の始まりの姿" },
-      { minLv: 5,  name: "見習い冒険者", desc: "少しずつ経験を積んだ姿" },
-      { minLv: 10, name: "勇者の戦士",   desc: "数々の試練を乗り越えた姿" },
-      { minLv: 20, name: "聖騎士",       desc: "神聖な光をまとう姿" },
-      { minLv: 35, name: "伝説の勇者",   desc: "神話に語り継がれる姿" },
-      { minLv: 50, name: "時の神",       desc: "時空を統べる最高峰の姿" }
+      { id: 'stage_0', minLv: 0,  name: "コキリの少年", desc: "冒険の始まりの姿" },
+      { id: 'stage_1', minLv: 5,  name: "見習い冒険者", desc: "少しずつ経験を積んだ姿" },
+      { id: 'stage_2', minLv: 10, name: "勇者の戦士",   desc: "数々の試練を乗り越えた姿" },
+      { id: 'stage_3', minLv: 20, name: "聖騎士",       desc: "神聖な光をまとう姿" },
+      { id: 'stage_4', minLv: 35, name: "伝説の勇者",   desc: "神話に語り継がれる姿" },
+      { id: 'stage_5', minLv: 50, name: "時の神",       desc: "時空を統べる最高峰の姿" }
     ];
+
+    const SOUND_EVENTS = [
+      { key: 'missionClear', label: '試練達成音', desc: '職業クエストの試練を達成したとき' },
+      { key: 'levelUp',      label: 'レベルアップ音', desc: '職業レベルが上がったとき' },
+      { key: 'dailyClear',   label: '日々の修行音', desc: 'デイリー試練を達成したとき' }
+    ];
+
+    const SOUND_PRESETS = [
+      { id: 'fanfare', name: 'ファンファーレ（上昇和音）' },
+      { id: 'ocarina', name: 'オカリナ風（澄んだ余韻）' },
+      { id: 'crystal', name: 'クリスタル（きらめき）' },
+      { id: 'bell',    name: '聖堂のベル（重厚な響き）' }
+    ];
+
+    const DEFAULT_SOUND_SETTINGS = {
+      missionClear: { enabled: true, preset: 'fanfare' },
+      levelUp:      { enabled: true, preset: 'bell' },
+      dailyClear:   { enabled: true, preset: 'ocarina' }
+    };
 
     window.state = {
       jobs: [],
@@ -582,6 +613,7 @@
       avatarStages: JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES)),
       avatarCustoms: {},
       soundEnabled: true,
+      soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS)),
       currentTab: 'quests',
       calendarYear: new Date().getFullYear(),
       calendarMonth: new Date().getMonth(),
@@ -603,25 +635,80 @@ const firebaseConfig = {
     let synth = null;
     function initSynth() {
       if (!synth) {
-        synth = new Tone.Synth({
+        synth = new Tone.PolySynth(Tone.Synth, {
           oscillator: { type: "triangle" },
-          envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.8 }
+          envelope: { attack: 0.008, decay: 0.14, sustain: 0.25, release: 0.9 }
         }).toDestination();
       }
     }
 
-    window.playFanfareSound = function() {
+    window.playSoundByEvent = function(eventKey) {
       if (!window.state.soundEnabled) return;
+      const cfg = window.state.soundSettings?.[eventKey] || DEFAULT_SOUND_SETTINGS[eventKey];
+      if (!cfg || !cfg.enabled) return;
+
+      const preset = cfg.preset || 'fanfare';
       try {
         initSynth();
         if (Tone.context.state !== 'running') { Tone.start(); }
         const now = Tone.now();
-        synth.triggerAttackRelease("C5", "8n", now);
-        synth.triggerAttackRelease("E5", "8n", now + 0.12);
-        synth.triggerAttackRelease("G5", "8n", now + 0.24);
-        synth.triggerAttackRelease("C6", "4n", now + 0.36);
+
+        if (preset === 'fanfare') {
+          synth.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.005, decay: 0.1, sustain: 0.3, release: 0.8 } });
+          synth.triggerAttackRelease("C5", "8n", now);
+          synth.triggerAttackRelease("E5", "8n", now + 0.11);
+          synth.triggerAttackRelease("G5", "8n", now + 0.22);
+          synth.triggerAttackRelease("C6", "4n", now + 0.33);
+        } else if (preset === 'ocarina') {
+          synth.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.04, decay: 0.15, sustain: 0.4, release: 1.1 } });
+          synth.triggerAttackRelease("G4", "8n", now);
+          synth.triggerAttackRelease("B4", "8n", now + 0.14);
+          synth.triggerAttackRelease("D5", "8n", now + 0.28);
+          synth.triggerAttackRelease("G5", "4n", now + 0.42);
+        } else if (preset === 'crystal') {
+          synth.set({ oscillator: { type: 'sine' }, envelope: { attack: 0.002, decay: 0.08, sustain: 0.15, release: 0.6 } });
+          synth.triggerAttackRelease("E5", "16n", now);
+          synth.triggerAttackRelease("A5", "16n", now + 0.08);
+          synth.triggerAttackRelease("C#6", "16n", now + 0.16);
+          synth.triggerAttackRelease("E6", "8n", now + 0.24);
+        } else if (preset === 'bell') {
+          synth.set({ oscillator: { type: 'triangle' }, envelope: { attack: 0.01, decay: 0.25, sustain: 0.35, release: 1.4 } });
+          synth.triggerAttackRelease(["C4", "G4"], "4n", now);
+          synth.triggerAttackRelease(["E4", "C5"], "2n", now + 0.28);
+        }
       } catch (e) {}
     };
+
+    window.playFanfareSound = function() {
+      window.playSoundByEvent('missionClear');
+    };
+
+    function normalizeAvatarStages(rawStages) {
+      if (!Array.isArray(rawStages) || rawStages.length === 0) {
+        return JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES));
+      }
+      return rawStages.map((s, idx) => ({
+        id: s.id || `stage_${idx}`,
+        minLv: typeof s.minLv === 'number' ? s.minLv : (parseInt(s.minLv) || 0),
+        name: s.name || `称号 ${idx + 1}`,
+        desc: s.desc || '冒険の段階'
+      }));
+    }
+
+    function normalizeSoundSettings(rawSound) {
+      const merged = JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS));
+      if (rawSound && typeof rawSound === 'object') {
+        SOUND_EVENTS.forEach(ev => {
+          if (rawSound[ev.key]) {
+            merged[ev.key] = {
+              enabled: typeof rawSound[ev.key].enabled === 'boolean' ? rawSound[ev.key].enabled : true,
+              preset: rawSound[ev.key].preset || merged[ev.key].preset
+            };
+          }
+        });
+      }
+      return merged;
+    }
 
     let app, auth, db;
     try {
@@ -662,10 +749,12 @@ const firebaseConfig = {
               window.state.jobs = data.jobs || [];
               window.state.dailies = data.dailies || [];
               window.state.logs = data.logs || [];
-              window.state.avatarStages = (data.avatarStages && data.avatarStages.length > 0)
-                ? data.avatarStages
-                : JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES));
+              window.state.avatarStages = normalizeAvatarStages(data.avatarStages);
               window.state.avatarCustoms = data.avatarCustoms || {};
+              if (typeof data.soundEnabled === 'boolean') {
+                window.state.soundEnabled = data.soundEnabled;
+              }
+              window.state.soundSettings = normalizeSoundSettings(data.soundSettings);
               checkDailyReset();
               renderAll();
             } else {
@@ -677,7 +766,9 @@ const firebaseConfig = {
                 ],
                 logs: [],
                 avatarStages: JSON.parse(JSON.stringify(DEFAULT_AVATAR_STAGES)),
-                avatarCustoms: {}
+                avatarCustoms: {},
+                soundEnabled: true,
+                soundSettings: JSON.parse(JSON.stringify(DEFAULT_SOUND_SETTINGS))
               };
               setDoc(userDocRef, initialData);
             }
@@ -702,7 +793,9 @@ const firebaseConfig = {
           dailies: window.state.dailies,
           logs: window.state.logs,
           avatarStages: window.state.avatarStages,
-          avatarCustoms: window.state.avatarCustoms
+          avatarCustoms: window.state.avatarCustoms,
+          soundEnabled: window.state.soundEnabled,
+          soundSettings: window.state.soundSettings
         }, { merge: true });
       } catch (e) {
         console.error("Save error:", e);
@@ -755,6 +848,13 @@ const firebaseConfig = {
       return total;
     }
 
+    function getStageCustomImage(stage, idx) {
+      return window.state.avatarCustoms[stage.id]
+        || window.state.avatarCustoms[`stage_${idx}`]
+        || window.state.avatarCustoms[stage.minLv]
+        || null;
+    }
+
     function getCurrentAvatarInfo() {
       const totalLv = calculateTotalLevel();
       const sortedStages = window.state.avatarStages
@@ -767,7 +867,7 @@ const firebaseConfig = {
           currentStage = sortedStages[i];
         }
       }
-      const customImg = window.state.avatarCustoms[`stage_${currentStage.idx}`] || window.state.avatarCustoms[currentStage.minLv];
+      const customImg = getStageCustomImage(currentStage, currentStage.idx);
       return { totalLv, currentStage, customImg };
     }
 
@@ -795,7 +895,7 @@ const firebaseConfig = {
       }
 
       if (tabName === 'logs') { renderCalendar(); renderLogs(); }
-      if (tabName === 'settings') { renderAvatarStagesSettings(); }
+      if (tabName === 'settings') { renderAvatarStagesSettings(); renderSoundSettings(); }
     };
 
     function renderAll() {
@@ -803,7 +903,7 @@ const firebaseConfig = {
       renderJobs();
       renderDailies();
       if (window.state.currentTab === 'logs') { renderCalendar(); renderLogs(); }
-      if (window.state.currentTab === 'settings') { renderAvatarStagesSettings(); }
+      if (window.state.currentTab === 'settings') { renderAvatarStagesSettings(); renderSoundSettings(); }
     }
 
     function renderHeaderStats() {
@@ -976,7 +1076,7 @@ const firebaseConfig = {
     window.incrementDaily = function(idx) {
       const d = window.state.dailies[idx];
       d.count++;
-      playFanfareSound();
+      window.playSoundByEvent('dailyClear');
       
       const now = new Date();
       window.state.logs.unshift({
@@ -1168,7 +1268,9 @@ const firebaseConfig = {
       job.level = (typeof job.level === 'number' ? job.level : 0) + 1;
       job.currentExp = 0;
       job.nextExp = 1;
-      playFanfareSound();
+
+      window.playSoundByEvent('missionClear');
+      setTimeout(() => window.playSoundByEvent('levelUp'), 260);
 
       window.state.logs.unshift({
         id: 'log_' + Date.now(),
@@ -1327,16 +1429,25 @@ const firebaseConfig = {
       const container = document.getElementById('avatar-stages-settings');
       if (!container) return;
 
+      const canDelete = window.state.avatarStages.length > 1;
+
       container.innerHTML = window.state.avatarStages.map((stage, idx) => {
-        const customImg = window.state.avatarCustoms[`stage_${idx}`] || window.state.avatarCustoms[stage.minLv];
+        const customImg = getStageCustomImage(stage, idx);
         return `
           <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-4 space-y-3">
             <div class="flex items-start justify-between gap-2.5">
               <div class="flex-1 space-y-2">
-                <div class="flex items-center gap-1.5">
-                  <span class="text-[11px] font-rpg font-bold text-[#d4af37]">Lv.</span>
-                  <input type="number" min="0" max="999" value="${stage.minLv}" onchange="updateAvatarStage(${idx}, 'minLv', this.value)" class="w-16 bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2 py-1 text-xs font-rpg font-bold text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
-                  <span class="text-[11px] text-[#a8a293]">〜</span>
+                <div class="flex items-center justify-between gap-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[11px] font-rpg font-bold text-[#d4af37]">Lv.</span>
+                    <input type="number" min="0" max="999" value="${stage.minLv}" onchange="updateAvatarStage(${idx}, 'minLv', this.value)" class="w-16 bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2 py-1 text-xs font-rpg font-bold text-[#f3e5ab] text-center focus:outline-none focus:border-[#d4af37]" />
+                    <span class="text-[11px] text-[#a8a293]">〜</span>
+                  </div>
+                  ${canDelete ? `
+                    <button type="button" onclick="deleteAvatarStage(${idx})" class="w-6 h-6 rounded-lg bg-[#141a17] border border-rose-500/30 text-[#a8a293] hover:text-rose-400 flex items-center justify-center text-[11px] transition" title="この段階を削除">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  ` : ''}
                 </div>
                 <input type="text" value="${stage.name}" placeholder="称号名を入力" onchange="updateAvatarStage(${idx}, 'name', this.value)" class="w-full bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-sm font-serif font-bold text-[#f3e5ab] focus:outline-none focus:border-[#d4af37]" />
               </div>
@@ -1349,12 +1460,43 @@ const firebaseConfig = {
                 <i class="fa-solid fa-upload mr-1.5"></i>画像を選択
                 <input type="file" accept="image/png,image/webp,image/jpeg,image/*" class="hidden" onchange="uploadAvatarImage(event, ${idx})">
               </label>
-              ${customImg ? `<button onclick="removeAvatarImage(${idx})" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-bold transition">画像消去</button>` : ''}
+              ${customImg ? `<button type="button" onclick="removeAvatarImage(${idx})" class="px-3 py-2 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 text-xs font-bold transition">画像消去</button>` : ''}
             </div>
           </div>
         `;
       }).join('');
     }
+
+    window.addAvatarStage = function() {
+      const maxLv = window.state.avatarStages.reduce((max, s) => Math.max(max, s.minLv || 0), 0);
+      const nextLv = maxLv + 10;
+      const id = `stage_${Date.now()}`;
+      window.state.avatarStages.push({
+        id,
+        minLv: nextLv,
+        name: `新たな称号 (Lv.${nextLv})`,
+        desc: '追加した冒険の段階'
+      });
+      saveToFirestore();
+      renderAll();
+      showToast(`Lv.${nextLv}〜 の段階を追加しました！`, "success");
+    };
+
+    window.deleteAvatarStage = function(idx) {
+      if (window.state.avatarStages.length <= 1) {
+        showToast("最低1つの段階は必要です", "error");
+        return;
+      }
+      const target = window.state.avatarStages[idx];
+      openConfirmModal("段階の削除", `「${target.name}（Lv.${target.minLv}〜）」を削除しますか？`, () => {
+        if (target?.id) delete window.state.avatarCustoms[target.id];
+        delete window.state.avatarCustoms[`stage_${idx}`];
+        window.state.avatarStages.splice(idx, 1);
+        saveToFirestore();
+        renderAll();
+        showToast("段階を削除しました", "info");
+      });
+    };
 
     // レベル帯・称号名の更新
     window.updateAvatarStage = function(idx, field, value) {
@@ -1393,6 +1535,8 @@ const firebaseConfig = {
     window.uploadAvatarImage = function(e, stageIdx) {
       const file = e.target.files[0];
       if (!file) return;
+      const stage = window.state.avatarStages[stageIdx];
+      if (!stage) return;
 
       const reader = new FileReader();
       reader.onload = function(event) {
@@ -1416,9 +1560,8 @@ const firebaseConfig = {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          // 透過情報を保持するため PNG 形式で書き出し
           const dataUrl = canvas.toDataURL('image/png');
-          window.state.avatarCustoms[`stage_${stageIdx}`] = dataUrl;
+          window.state.avatarCustoms[stage.id] = dataUrl;
           saveToFirestore();
           renderAll();
           showToast("レベル別アイコン画像を設定しました！", "success");
@@ -1430,11 +1573,85 @@ const firebaseConfig = {
 
     window.removeAvatarImage = function(stageIdx) {
       const stage = window.state.avatarStages[stageIdx];
+      if (stage?.id) delete window.state.avatarCustoms[stage.id];
       delete window.state.avatarCustoms[`stage_${stageIdx}`];
       if (stage) delete window.state.avatarCustoms[stage.minLv];
       saveToFirestore();
       renderAll();
       showToast("アイコン画像を消去しました", "info");
+    };
+
+    // 効果音個別設定の描画・更新
+    function renderSoundSettings() {
+      const container = document.getElementById('sound-effects-settings');
+      const masterToggle = document.getElementById('sound-toggle');
+      if (masterToggle) masterToggle.checked = Boolean(window.state.soundEnabled);
+      if (!container) return;
+
+      const settings = normalizeSoundSettings(window.state.soundSettings);
+      window.state.soundSettings = settings;
+
+      container.innerHTML = SOUND_EVENTS.map(ev => {
+        const cfg = settings[ev.key];
+        const optionsHtml = SOUND_PRESETS.map(p =>
+          `<option value="${p.id}" ${cfg.preset === p.id ? 'selected' : ''}>${p.name}</option>`
+        ).join('');
+
+        return `
+          <div class="bg-[#0c100e] border border-[#d4af37]/30 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${!window.state.soundEnabled ? 'opacity-60' : ''}">
+            <div class="min-w-0">
+              <div class="text-sm font-serif font-bold text-[#f3e5ab]">${ev.label}</div>
+              <div class="text-[11px] text-[#a8a293] mt-0.5">${ev.desc}</div>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap sm:flex-nowrap">
+              <select onchange="updateSoundEffectPreset('${ev.key}', this.value)" class="bg-[#141a17] border border-[#d4af37]/40 rounded-lg px-2.5 py-1.5 text-xs text-[#ede8dc] focus:outline-none focus:border-[#d4af37]">
+                ${optionsHtml}
+              </select>
+              <button type="button" onclick="previewSoundEffect('${ev.key}')" class="px-2.5 py-1.5 rounded-lg bg-[#1b241f] hover:bg-[#232f28] border border-[#d4af37]/40 text-[#f3e5ab] text-xs font-bold transition whitespace-nowrap" title="試聴">
+                <i class="fa-solid fa-play mr-1"></i>試聴
+              </button>
+              <label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+                <input type="checkbox" ${cfg.enabled ? 'checked' : ''} onchange="updateSoundEffectEnabled('${ev.key}', this.checked)" class="sr-only peer">
+                <div class="w-10 h-5 bg-[#141a17] border border-[#d4af37]/40 rounded-full peer peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#f3e5ab] after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#d4af37]"></div>
+              </label>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.toggleMasterSound = function(enabled) {
+      window.state.soundEnabled = Boolean(enabled);
+      saveToFirestore();
+      renderSoundSettings();
+      showToast(window.state.soundEnabled ? "効果音を有効にしました" : "効果音を消音にしました", "info");
+    };
+
+    window.updateSoundEffectEnabled = function(eventKey, enabled) {
+      window.state.soundSettings = normalizeSoundSettings(window.state.soundSettings);
+      window.state.soundSettings[eventKey].enabled = Boolean(enabled);
+      saveToFirestore();
+      showToast("効果音のON/OFFを更新しました", "success");
+    };
+
+    window.updateSoundEffectPreset = function(eventKey, presetId) {
+      window.state.soundSettings = normalizeSoundSettings(window.state.soundSettings);
+      window.state.soundSettings[eventKey].preset = presetId;
+      saveToFirestore();
+      window.playSoundByEvent(eventKey);
+      showToast("効果音の音色を変更しました", "success");
+    };
+
+    window.previewSoundEffect = function(eventKey) {
+      const prevMaster = window.state.soundEnabled;
+      const settings = normalizeSoundSettings(window.state.soundSettings);
+      const prevItemEnabled = settings[eventKey].enabled;
+      window.state.soundEnabled = true;
+      settings[eventKey].enabled = true;
+      window.state.soundSettings = settings;
+      window.playSoundByEvent(eventKey);
+      window.state.soundEnabled = prevMaster;
+      settings[eventKey].enabled = prevItemEnabled;
     };
 
     let confirmCallback = null;
